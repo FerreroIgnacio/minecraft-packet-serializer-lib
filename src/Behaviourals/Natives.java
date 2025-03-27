@@ -1,3 +1,5 @@
+package Behaviourals;
+
 import SerializationInfo.Refs.Components.FunctionComponent;
 import SerializationInfo.Refs.DeserializerRef;
 import SerializationInfo.Refs.SerializerRef;
@@ -180,6 +182,14 @@ public enum Natives {
     Natives(String nameInJson, SerializationInfo serializationInfo){
         this.nameInJson = nameInJson;
         this.serializationInfo = serializationInfo;
+    }
+
+    public SerializationInfo getSerializationInfo() {
+        return serializationInfo;
+    }
+
+    public String getNameInJson() {
+        return nameInJson;
     }
 
     private enum DeserializerFunctions {

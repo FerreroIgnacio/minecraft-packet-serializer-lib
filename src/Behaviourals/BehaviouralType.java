@@ -39,5 +39,10 @@ public abstract class BehaviouralType {
     private BehaviouralType getFather() {
         return father;
     }
+
+    public Map<String, BehaviouralType> getChildren() {
+        return children;
+    }
+
     public abstract List<PacketField> asPacketFields();
 }
