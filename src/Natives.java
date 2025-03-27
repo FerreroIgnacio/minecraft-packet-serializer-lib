@@ -1,153 +1,180 @@
+import SerializationInfo.Refs.Components.FunctionComponent;
 import SerializationInfo.Refs.DeserializerRef;
 import SerializationInfo.Refs.SerializerRef;
 import SerializationInfo.SerializationInfo;
 
+import java.math.BigInteger;
+import java.util.BitSet;
+
 public enum Natives {
+
     VARINT("varint",
             new SerializationInfo(
                     Integer.class,
-                    new SerializerRef(),
-                    new DeserializerRef()
+                    new SerializerRef(new FunctionComponent("writeVarint", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readVarint", Consts.BUFNAME.toString()))
             )
     ),
-    VARLONG("varlong", new ClassBuildable(
-
-            Long.class,
-            Consts.VARLONGDESERIALIZER.getF(),
-            Consts.VARLONG.getSerializerRef())),
-    OPTVARINT("optvarint", new ClassBuildable(
-
-            Integer.class,
-            Consts.BOOLDESERIALIZER.getF(),
-            Consts.VARINT.getSerializerRef()
-    )),
-    BOOL("bool", new ClassBuildable(
-
-            Boolean.class,
-            Consts.BOOLDESERIALIZER.getF(),
-            Consts.BOOL.getSerializerRef()
-    )),
-    U8("u8", new ClassBuildable(
-
-            Short.class,
-            Consts.U8DESERIALIZER.getF(),
-            Consts.U8.getSerializerRef()
-    )),
-    U16("u16", new ClassBuildable(
-
-            Integer.class,
-            Consts.U16DESERIALIZER.getF(),
-            Consts.U16.getSerializerRef()
-    )),
-    U32("u32", new ClassBuildable(
-
-            Long.class,
-            Consts.U32DESERIALIZER.getF(),
-            Consts.U32.getSerializerRef()
-    )),
-    U64("u64", new ClassBuildable(
-
-            BigInteger.class,
-            Consts.U64DESERIALIZER.getF(),
-            Consts.U64.getSerializerRef()
-    )),
-    I8("i8", new ClassBuildable(
-
-            Byte.class,
-            Consts.I8DESERIALIZER.getF(),
-            Consts.I8.getSerializerRef()
-    )),
-    I16("i16", new ClassBuildable(
-
-            Short.class,
-            Consts.I16DESERIALIZER.getF(),
-            Consts.I16.getSerializerRef()
-    )),
-    I32("i32", new ClassBuildable(
-
-            Integer.class,
-            Consts.I32DESERIALIZER.getF(),
-            Consts.I32.getSerializerRef()
-    )),
-    I64("i64", new ClassBuildable(
-
-            Long.class,
-            Consts.I64DESERIALIZER.getF(),
-            Consts.I64.getSerializerRef()
-    )),
-    F32("f32", new ClassBuildable(
-
-            Float.class,
-            Consts.F32DESERIALIZER.getF(),
-            Consts.F32.getSerializerRef()
-    )),
-    F64("f64", new ClassBuildable(
-
-            Double.class,
-            Consts.F64DESERIALIZER.getF(),
-            Consts.F64.getSerializerRef()
-    )),
-    UUID("UUID", new ClassBuildable(
-
-            BigInteger.class,
-            Consts.UUIDDESERIALIZER.getF(),
-            Consts.UUID.getSerializerRef()
-    )),
-    // PSTRING("pstring", String.class),
-    ANONYMOUSNBT("anonymousNbt",new ClassBuildable(
-
-            String.class,
-            //  Consts.ANONYMOUSNBTDESERIALIZER.getF(),
-            Consts.STRINGDESERIALIZER.getF(),
-            Consts.ANONYMOUSNBT.getSerializerRef()
-    )),
-    ANONOPTIONALNBT("anonOptionalNbt", new ClassBuildable(
-
-            String.class,
-            //   Consts.ANONOPTIONALNBTDESERIALIZER.getF(),
-            Consts.STRINGDESERIALIZER.getF(),
-            Consts.ANONOPTIONALNBT.getSerializerRef()
-    )),
-    OPTIONALNBT("optionalNbt", new ClassBuildable(
-
-            String.class,
-            //Consts.OPTIONALNBTDESERIALIZER.getF(),
-            Consts.STRINGDESERIALIZER.getF(),
-            Consts.OPTIONALNBT.getSerializerRef()
-    )),
-    BIT("bit", new ClassBuildable(
-
-            Boolean.class,
-            Consts.BITDESERIALIZER.getF(),
-            Consts.BIT.getSerializerRef()
-    )),
-    NBT("nbt", new ClassBuildable(
-
-            String.class,
-            Consts.NBTDESERIALIZER.getF(),
-            Consts.NBT.getSerializerRef()
-    )),
-    STRING("string", new ClassBuildable(
-
-            String.class,
-            Consts.STRINGDESERIALIZER.getF(),
-            Consts.STRING.getSerializerRef()
-    )),
-    VOID("void", new ClassBuildable(
-
-            Void.class,
-            new FuncRef("ERROR -477", new ArgRef(Consts.BUFNAME.toString())),
-            new FuncRef(":(", new ArgRef(":(("))
-    )),
+    VARLONG("varlong",
+            new SerializationInfo(
+                    Long.class,
+                    new SerializerRef(new FunctionComponent("writeVarlong", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readVarlong", Consts.BUFNAME.toString()))
+            )
+    ),
+    OPTVARINT("optvarint",
+            new SerializationInfo(
+                    Integer.class,
+                    new SerializerRef(new FunctionComponent("writeVarint", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readOptvarint", Consts.BUFNAME.toString()))
+            )
+    ),
+    BOOL("bool",
+            new SerializationInfo(
+                    Boolean.class,
+                    new SerializerRef(new FunctionComponent("writeBoolean", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readBoolean", Consts.BUFNAME.toString()))
+            )
+    ),
+    U8("u8",
+            new SerializationInfo(
+                    Short.class,
+                    new SerializerRef(new FunctionComponent("writeU8", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readU8", Consts.BUFNAME.toString()))
+            )
+    ),
+    U16("u16",
+            new SerializationInfo(
+                    Integer.class,
+                    new SerializerRef(new FunctionComponent("writeU16", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readU16", Consts.BUFNAME.toString()))
+            )
+    ),
+    U32("u32",
+            new SerializationInfo(
+                    Long.class,
+                    new SerializerRef(new FunctionComponent("writeU32", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readU32", Consts.BUFNAME.toString()))
+            )
+    ),
+    U64("u64",
+            new SerializationInfo(
+                    BigInteger.class,
+                    new SerializerRef(new FunctionComponent("writeU64", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readU64", Consts.BUFNAME.toString()))
+            )
+    ),
+    I8("i8",
+            new SerializationInfo(
+                    Byte.class,
+                    new SerializerRef(new FunctionComponent("writeI8", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readI8", Consts.BUFNAME.toString()))
+            )
+    ),
+    I16("i16",
+            new SerializationInfo(
+                    Short.class,
+                    new SerializerRef(new FunctionComponent("writeI16", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readI16", Consts.BUFNAME.toString()))
+            )
+    ),
+    I32("i32",
+            new SerializationInfo(
+                    Integer.class,
+                    new SerializerRef(new FunctionComponent("writeI32", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readI32", Consts.BUFNAME.toString()))
+            )
+    ),
+    I64("i64",
+            new SerializationInfo(
+                    Long.class,
+                    new SerializerRef(new FunctionComponent("writeI64", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readI64", Consts.BUFNAME.toString()))
+            )
+    ),
+    F32("f32",
+            new SerializationInfo(
+                    Float.class,
+                    new SerializerRef(new FunctionComponent("writeFloat", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readFloat", Consts.BUFNAME.toString()))
+            )
+    ),
+    F64("f64",
+            new SerializationInfo(
+                    Double.class,
+                    new SerializerRef(new FunctionComponent("writeDouble", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readDouble", Consts.BUFNAME.toString()))
+            )
+    ),
+    UUID("UUID",
+            new SerializationInfo(
+                    BigInteger.class,
+                    new SerializerRef(new FunctionComponent("writeUUID", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readUUID", Consts.BUFNAME.toString()))
+            )
+    ),
+    ANONYMOUSNBT("anonymousNbt",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("writeAnonymousNbt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readString", Consts.BUFNAME.toString()))
+            )
+    ),
+    ANONOPTIONALNBT("anonOptionalNbt",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("writeAnonOptionalNbt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readString", Consts.BUFNAME.toString()))
+            )
+    ),
+    OPTIONALNBT("optionalNbt",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("writeOptionalNbt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readString", Consts.BUFNAME.toString()))
+            )
+    ),
+    BIT("bit",
+            new SerializationInfo(
+                    Boolean.class,
+                    new SerializerRef(new FunctionComponent("writeBit", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readBit", Consts.BUFNAME.toString()))
+            )
+    ),
+    NBT("nbt",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("writeNbt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readNbt", Consts.BUFNAME.toString()))
+            )
+    ),
+    STRING("string",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("writeString", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readString", Consts.BUFNAME.toString()))
+            )
+    ),
+    VOID("void",
+            new SerializationInfo(
+                    Void.class,
+                    new SerializerRef(new FunctionComponent("writeVoid", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readVoid", Consts.BUFNAME.toString()))
+            )
+    ),
     RESTBUFFER("restBuffer",
-            new ClassBuildable(
+            new SerializationInfo(
                     BitSet.class,
-                    Consts.RESTBUFFERDESERIALIZER.getF(),
-                    new FuncRef(":(@RESTBUFFER", new ArgRef(":(("))
-            ))
-    ;
+                    new SerializerRef(new FunctionComponent("writeRestBuffer", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("readRestBuffer", Consts.BUFNAME.toString()))
+            )
+    );
+
+
     private final SerializationInfo serializationInfo;
     private final String nameInJson;
+
+
     Natives(String nameInJson, SerializationInfo serializationInfo){
         this.nameInJson = nameInJson;
         this.serializationInfo = serializationInfo;
