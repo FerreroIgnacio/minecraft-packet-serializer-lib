@@ -1,3 +1,5 @@
+package Behaviourals;
+
 public enum Consts {
     BUFNAME("buf");
 

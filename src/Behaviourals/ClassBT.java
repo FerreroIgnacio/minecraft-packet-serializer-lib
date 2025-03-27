@@ -11,6 +11,7 @@ public class ClassBT extends BehaviouralType{
 
     public ClassBT(SerializationInfo serializationInfo) {
         super();
+        this.serializationInfo = serializationInfo;
     }
     public List<PacketField> asPacketFields(){
         return List.of(new PacketField(
