@@ -1,10 +1,15 @@
+import SerializationInfo.Refs.DeserializerRef;
+import SerializationInfo.Refs.SerializerRef;
 import SerializationInfo.SerializationInfo;
 
 public enum Natives {
-    VARINT("varint",new SerializationInfo(
-            Integer.class, Consts.VARINTDESERIALIZER.getF(),
-            Consts.VARINT.getSerializerRef()
-    )),
+    VARINT("varint",
+            new SerializationInfo(
+                    Integer.class,
+                    new SerializerRef(),
+                    new DeserializerRef()
+            )
+    ),
     VARLONG("varlong", new ClassBuildable(
 
             Long.class,
@@ -140,4 +145,11 @@ public enum Natives {
                     Consts.RESTBUFFERDESERIALIZER.getF(),
                     new FuncRef(":(@RESTBUFFER", new ArgRef(":(("))
             ))
+    ;
+    private final SerializationInfo serializationInfo;
+    private final String nameInJson;
+    Natives(String nameInJson, SerializationInfo serializationInfo){
+        this.nameInJson = nameInJson;
+        this.serializationInfo = serializationInfo;
+    }
 }
