@@ -1,6 +1,10 @@
+package Behaviourals;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
-public class BehaviouralType {
+public abstract class BehaviouralType {
     private BehaviouralType father;
     private final Map<String, BehaviouralType> children;
     private GenericPath path;
@@ -11,6 +15,10 @@ public class BehaviouralType {
         for(BehaviouralType child : children.values()) {
             child.setFather(this);
         }
+    }
+
+    public BehaviouralType() {
+        this(Collections.emptyMap());
     }
 
     private void setFather(BehaviouralType father) {
@@ -31,4 +39,5 @@ public class BehaviouralType {
     private BehaviouralType getFather() {
         return father;
     }
+    public abstract List<PacketField> asPacketFields();
 }

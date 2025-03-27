@@ -1,3 +1,5 @@
+package Behaviourals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,5 +19,8 @@ public class GenericPath {
     @Override
     public String toString() {
         return String.join("/", segments);
+    }
+    public String getLastSegment() {
+        return segments.getLast();
     }
 }
