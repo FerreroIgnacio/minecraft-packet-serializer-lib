@@ -38,7 +38,7 @@ public abstract class AbstractBehavioural {
         return path;
     }
 
-    private AbstractBehavioural getFather() {
+    protected AbstractBehavioural getFather() {
         return father;
     }
 
@@ -49,15 +49,13 @@ public abstract class AbstractBehavioural {
     public abstract List<PacketField> asPacketFields();
 
     protected AbstractBehavioural resolvePath(GenericPath path) {
-        GenericPath currentPath = this.path;
-
         if(path.toString().equals("/")) {
             return this;
         }
         if(path.getFirstSegment().equals("..")){
             if(father == null)
                 throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
-            return father.resolvePath(path.consumeFirst());
+            return father.resolvePath(path);
         }
         if(children.containsKey(path.getFirstSegment())){
             return children.get(path.getFirstSegment()).resolvePath(path.consumeFirst());

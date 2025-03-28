@@ -1,5 +1,7 @@
 package Behaviourals;
 
+import Generic.BehaviouralNavigationException;
+import Generic.GenericPath;
 import Serialization.PacketField;
 
 import java.util.LinkedHashMap;
@@ -17,5 +19,22 @@ public class ContainerBT extends AbstractBehavioural {
         return getChildren().values().stream()
                 .map(AbstractBehavioural::asPacketFields)
                 .flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    @Override
+    protected AbstractBehavioural resolvePath(GenericPath path) {
+        if(path.toString().equals("/")) {
+            return this;
+        }
+        if(path.getFirstSegment().equals("..")){
+            if(getFather() == null)
+                throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
+            return getFather().resolvePath(path.consumeFirst());
+        }
+        if(getChildren().containsKey(path.getFirstSegment())){
+            return getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
+        } else {
+            throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + getChildren().keySet() + " are available");
+        }
     }
 }

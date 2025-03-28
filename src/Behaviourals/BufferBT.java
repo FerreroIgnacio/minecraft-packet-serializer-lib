@@ -9,9 +9,9 @@ public class BufferBT extends AbstractBehavioural {
 
     private final Integer fixedCount;
     private final String fieldName;
-    public BufferBT(String fieldName) {
+    public BufferBT(String fieldPath) {
         super();
-        this.fieldName = fieldName;
+        this.fieldName = fieldPath;
         this.fixedCount = null;
     }
     public BufferBT(Integer fixedCount) {
@@ -22,8 +22,8 @@ public class BufferBT extends AbstractBehavioural {
 
     @Override
     public List<PacketField> asPacketFields() {
-      //  AbstractBehavioural behavioural = super.
-     //   DeserializerRef readBuffer = new DeserializerRef();
+      //  AbstractBehavioural behavioural = resolvePath()
+       // DeserializerRef readBuffer = new DeserializerRef();
         return List.of();
     }
 }
