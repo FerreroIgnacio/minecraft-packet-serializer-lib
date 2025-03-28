@@ -14,13 +14,14 @@ public enum BehaviouralFactory {
     BITFIELD("bitfield"){
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
-            Map<String, Integer> sizes = new LinkedHashMap<>();
-            Map<String, Boolean> signed = new LinkedHashMap<>();
+
+            LinkedHashMap<String, BitfieldComponentBT> children = new LinkedHashMap<>();
             for(Map<String, Object> node : l) {
-                sizes.put((String)node.get("name"), (Integer)node.get("size"));
-                signed.put((String)node.get("name"), (Boolean)node.get("signed"));
+                int size = (Integer)node.get("size");
+                boolean signed = (Boolean)node.get("signed");
+                children.put((String)node.get("name"), new BitfieldComponentBT(size, signed));
             }
-            return new BitfieldBT(sizes, signed);
+            return new BitfieldBT(children);
         }
     },
     CONTAINER("container"){

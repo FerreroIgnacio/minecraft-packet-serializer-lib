@@ -12,18 +12,18 @@ import java.util.*;
 
 public class BitfieldBT extends AbstractBehavioural {
 
-    Map<String, Integer> sizes;
-    Map<String, Boolean> signed;
-    public BitfieldBT(Map<String, Integer> size,
-                      Map<String, Boolean> signed) {
-        super(new LinkedHashMap<>());
-        this.signed = signed;
-        this.sizes = size;
+
+    public BitfieldBT(LinkedHashMap<String, BitfieldComponentBT> children) {
+        super(children);
     }
     public List<PacketField> asPacketFields() {
         int totalSize = 0;
-        for(Map.Entry<String, Integer> entry: sizes.entrySet()) {
-            totalSize += entry.getValue();
+        for(Map.Entry<String, ? extends AbstractBehavioural> entry: getChildren().entrySet()) {
+            if(entry.getValue() instanceof BitfieldComponentBT bfc) {
+                totalSize += bfc.getSize();
+            } else {
+                throw new RuntimeException("Bitfield child " + entry.getKey() + " is not a BitfieldComponentBT");
+            }
         }
         Natives totalValueEnum;
         Class<?> totalClazz;
@@ -53,16 +53,18 @@ public class BitfieldBT extends AbstractBehavioural {
                 totalClazz,
                 totalSerializerRef,
                 totalDeserializerRef);
+
         String totalName = getPath().getLastSegment();
+
         PacketField totalField = new PacketField(
                 totalName,
                 totalInfo);
-        List<PacketField> returnList = new ArrayList<PacketField>();
+        List<PacketField> returnList = new ArrayList<>();
         returnList.add(totalField);
 
-        for(String key: sizes.keySet()) {
-            int fieldSize = sizes.get(key);
-            boolean signed = this.signed.get(key);
+        for(String key: getChildren().keySet()) {
+            int fieldSize = ((BitfieldComponentBT)getChildren().get(key)).getSize();
+            boolean signed = ((BitfieldComponentBT)getChildren().get(key)).isSigned();
             DeserializerRef deserializerRef = new DeserializerRef(
                     new UnsafeComponent(
                          "((1L << " + fieldSize + " ) - 1)"

@@ -20,7 +20,7 @@ public class ContainerBT extends AbstractBehavioural {
                 .map(AbstractBehavioural::asPacketFields)
                 .flatMap(List::stream).collect(Collectors.toList());
     }
-
+/*
     @Override
     protected AbstractBehavioural resolvePath(GenericPath path) {
         if(path.toString().equals("/")) {
@@ -37,4 +37,6 @@ public class ContainerBT extends AbstractBehavioural {
             throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + getChildren().keySet() + " are available");
         }
     }
+    */
+
 }

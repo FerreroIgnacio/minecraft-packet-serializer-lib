@@ -39,4 +39,11 @@ public class GenericPath {
     public GenericPath consumeFirst(){
         return new GenericPath(segments.subList(1, segments.size()));
     }
+
+    public int getLength() {
+        return segments.size();
+    }
+    public String getIndexSegment(int index) {
+        return segments.get(index);
+    }
 }

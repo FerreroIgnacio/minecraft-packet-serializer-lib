@@ -8,13 +8,13 @@ import java.util.*;
 
 public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
-    private final LinkedHashMap<String, AbstractBehavioural> children;
+    private final LinkedHashMap<String, ? extends AbstractBehavioural> children;
     private GenericPath path;
 
-    public AbstractBehavioural(LinkedHashMap<String, AbstractBehavioural> children) {
+    public AbstractBehavioural(LinkedHashMap<String, ? extends AbstractBehavioural> children) {
         this.children = children;
         this.path = new GenericPath();
-        for(Map.Entry<String, AbstractBehavioural> childEntry : children.entrySet()) {
+        for(Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
@@ -23,14 +23,14 @@ public abstract class AbstractBehavioural {
         this(new LinkedHashMap<>());
     }
 
-    private void setFather(String keyOfSelf, AbstractBehavioural father) {
+    protected void setFather(String keyOfSelf, AbstractBehavioural father) {
         this.father = father;
         this.updatePath(keyOfSelf);
     }
-    private void updatePath(String keyOfSelf) {
+    protected void updatePath(String keyOfSelf) {
         AbstractBehavioural father = getFather();
         this.path = father != null ? father.getPath().append(keyOfSelf) : new GenericPath();
-        for(Map.Entry<String, AbstractBehavioural> childEntry: children.entrySet()){
+        for(Map.Entry<String, ? extends AbstractBehavioural> childEntry: children.entrySet()){
             childEntry.getValue().updatePath(childEntry.getKey());
         }
     }
@@ -42,12 +42,12 @@ public abstract class AbstractBehavioural {
         return father;
     }
 
-    public Map<String, AbstractBehavioural> getChildren() {
+    public Map<String, ? extends AbstractBehavioural> getChildren() {
         return children;
     }
 
     public abstract List<PacketField> asPacketFields();
-
+/*
     protected AbstractBehavioural resolvePath(GenericPath path) {
         if(path.toString().equals("/")) {
             return this;
@@ -57,8 +57,8 @@ public abstract class AbstractBehavioural {
                 throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
             return father.resolvePath(path);
         }
-        if(children.containsKey(path.getFirstSegment())){
-            return children.get(path.getFirstSegment()).resolvePath(path.consumeFirst());
+        if(father.getChildren().containsKey(path.getFirstSegment())){
+            return father.getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
         } else {
             throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + children.keySet() + " are available");
         }
@@ -66,4 +66,6 @@ public abstract class AbstractBehavioural {
     protected AbstractBehavioural resolvePath(String pathString) {
         return resolvePath(new GenericPath(pathString));
     }
+    */
+
 }
