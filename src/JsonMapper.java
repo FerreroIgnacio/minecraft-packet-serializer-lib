@@ -6,20 +6,27 @@ import java.util.Map;
 
 public class JsonMapper {
 
+    private boolean isBehavioural(String s){
+        try {
+            BehaviouralFactory.valueOf(s.toUpperCase());
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     @JsonProperty("types")
     public void SetTypes(Map<String, Object> types){
         for(Map.Entry<String, Object> entry: types.entrySet()) {
-            AbstractBehavioural bh = null;
-            if (entry.getValue() instanceof String s && s.equals("native")) {
-                try {
-                    BehaviouralFactory.valueOf(entry.getKey().toUpperCase());
-                } catch (IllegalArgumentException e) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            if(!isBehavioural(key)) {
+                AbstractBehavioural bh;
+                if (value.equals("native")) {
                     bh = BehaviouralFactory.createBehavioural(entry.getKey());
+                } else {
+                    bh = BehaviouralFactory.createBehavioural(entry.getValue());
                 }
-            } else {
-                bh = BehaviouralFactory.createBehavioural(entry.getValue());
-            }
-            if (bh != null) {
                 BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
             }
         }

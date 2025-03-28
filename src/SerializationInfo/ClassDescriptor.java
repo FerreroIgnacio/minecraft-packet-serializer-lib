@@ -22,7 +22,7 @@ public class ClassDescriptor {
 
     @Override
     public String toString() {
-        return clazz.getSimpleName() + (generics == null ? "" : "<" + String.join(", ", generics.stream().map(ClassDescriptor::toString).toList()) + ">");
+        return clazz.getSimpleName() + (generics.isEmpty() ? "" : "<" + String.join(", ", generics.stream().map(ClassDescriptor::toString).toList()) + ">");
     }
 }
 

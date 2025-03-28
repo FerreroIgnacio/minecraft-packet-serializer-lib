@@ -1,5 +1,6 @@
-package Behaviourals;
+package Serialization;
 
+import Generic.Consts;
 import SerializationInfo.Refs.Components.FunctionComponent;
 import SerializationInfo.Refs.DeserializerRef;
 import SerializationInfo.Refs.SerializerRef;

@@ -1,5 +1,8 @@
 package Behaviourals;
 
+import Generic.GenericPath;
+import Serialization.PacketField;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
