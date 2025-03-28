@@ -8,4 +8,9 @@ public abstract class Ref {
     public Ref(RefComponent component) {
         this.component = component;
     }
+
+    @Override
+    public String toString() {
+        return component.toString();
+    }
 }

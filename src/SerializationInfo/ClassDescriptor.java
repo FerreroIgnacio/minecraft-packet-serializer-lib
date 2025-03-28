@@ -19,5 +19,10 @@ public class ClassDescriptor {
     public Class<?> getClazz() {
         return clazz;
     }
+
+    @Override
+    public String toString() {
+        return clazz.getSimpleName() + (generics == null ? "" : "<" + String.join(", ", generics.stream().map(ClassDescriptor::toString).toList()) + ">");
+    }
 }
 
