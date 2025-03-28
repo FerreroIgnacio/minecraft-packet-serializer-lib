@@ -11,24 +11,23 @@ import java.util.List;
 public enum BehaviouralFactory {
     BITFIELD("bitfield"){
         @Override
-        protected BehaviouralType build(Map<String, Object> map) {
+        protected BehaviouralType build(List<Map<String, Object>> l) {
             Map<String, Integer> sizes = new LinkedHashMap<>();
             Map<String, Boolean> signed = new LinkedHashMap<>();
-            for(Map.Entry<String, Object> entry : map.entrySet()) {
-                Map<String,Object> node = (Map<String, Object>) entry.getValue();
-                sizes.put(entry.getKey(), (Integer)node.get("size"));
-                signed.put(entry.getKey(), (Boolean)node.get("signed"));
+            for(Map<String, Object> node : l) {
+                sizes.put((String)node.get("name"), (Integer)node.get("size"));
+                signed.put((String)node.get("name"), (Boolean)node.get("signed"));
             }
             return new BitfieldBT(sizes, signed);
         }
     },
     CONTAINER("container"){
         @Override
-        protected BehaviouralType build(Map<String, Object> map) {
+        protected BehaviouralType build(List<Map<String, Object>> l) {
             Map<String, BehaviouralType> children = new HashMap<>();
-            for(Map.Entry<String, Object> entry : map.entrySet()) {
-                BehaviouralType child = createBehavioural(entry.getValue());
-                children.put(entry.getKey(), child);
+            for(Map<String, Object> node : l ) {
+                BehaviouralType child = createBehavioural(node.get("type"));
+                children.put((String)node.get("name"), child);
             }
             return new ContainerBT(children);
         }
@@ -59,6 +58,26 @@ public enum BehaviouralFactory {
         throw new RuntimeException("Attempting to create " + this
                 + " from map");
     }
+    protected BehaviouralType build(List<Map<String, Object>> l){
+        throw new RuntimeException("Attempting to create " + this
+                + " from list");
+    }
+    private BehaviouralType objectBuild(Object o){
+        switch (o){
+            case List<?> l: {
+                return this.build((List<Map<String, Object>>)l);
+            }
+            case Map<?,?> m: {
+                return this.build((Map<String, Object>)m);
+            }
+            case String s: {
+                return createBehavioural(s);
+            }
+            default: {
+                throw new UnexpectedJsonFormatException(o.toString());
+            }
+        }
+    }
 
     public static BehaviouralType createBehavioural(Object o) {
         switch(o){
@@ -66,8 +85,8 @@ public enum BehaviouralFactory {
                 String s = (String)l.getFirst();
                 Object typeObject = l.getLast();
                 try{
-                    BehaviouralFactory factory = BehaviouralFactory.valueOf(s);
-                    return factory.createBehavioural(typeObject);
+                    BehaviouralFactory factory = BehaviouralFactory.valueOf(s.toUpperCase());
+                    return factory.objectBuild(typeObject);
                 } catch(IllegalArgumentException e){
                     return new BehaviouralType() {
                         @Override

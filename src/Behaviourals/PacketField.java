@@ -10,4 +10,12 @@ public class PacketField {
         this.name = name;
         this.serializationInfo = serializationInfo;
     }
+
+    @Override
+    public String toString() {
+        return "PacketField{" +
+                "name='" + name + '\'' +
+                ", serializationInfo=" + serializationInfo +
+                '}';
+    }
 }

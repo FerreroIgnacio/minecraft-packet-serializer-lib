@@ -12,8 +12,8 @@ public abstract class BehaviouralType {
     public BehaviouralType(Map<String, BehaviouralType> children) {
         this.children = children;
         this.path = new GenericPath();
-        for(BehaviouralType child : children.values()) {
-            child.setFather(this);
+        for(Map.Entry<String, BehaviouralType> childEntry : children.entrySet()) {
+            childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
 
@@ -21,15 +21,15 @@ public abstract class BehaviouralType {
         this(Collections.emptyMap());
     }
 
-    private void setFather(BehaviouralType father) {
+    private void setFather(String keyOfSelf, BehaviouralType father) {
         this.father = father;
-        this.updatePath();
+        this.updatePath(keyOfSelf);
     }
-    private void updatePath(){
+    private void updatePath(String keyOfSelf) {
         BehaviouralType father = getFather();
-        this.path = father != null ? father.getPath() : new GenericPath();
-        for(BehaviouralType child : father.children.values()){
-            child.updatePath();
+        this.path = father != null ? father.getPath().append(keyOfSelf) : new GenericPath();
+        for(Map.Entry<String, BehaviouralType> childEntry: children.entrySet()){
+            childEntry.getValue().updatePath(childEntry.getKey());
         }
     }
     public GenericPath getPath() {

@@ -20,4 +20,10 @@ public class ClassBT extends BehaviouralType{
         );
     }
 
+    @Override
+    public String toString() {
+        return "ClassBT{" +
+                "serializationInfo=" + serializationInfo +
+                '}';
+    }
 }

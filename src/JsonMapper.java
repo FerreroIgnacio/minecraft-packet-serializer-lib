@@ -13,7 +13,7 @@ public class JsonMapper {
             BehaviouralType bh = null;
             if (entry.getValue() instanceof String s && s.equals("native")) {
                 try {
-                    BehaviouralFactory.valueOf(entry.getKey());
+                    BehaviouralFactory.valueOf(entry.getKey().toUpperCase());
                 } catch (IllegalArgumentException e) {
                     bh = BehaviouralFactory.createBehavioural(entry.getKey());
                 }
