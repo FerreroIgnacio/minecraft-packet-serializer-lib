@@ -22,8 +22,6 @@ public class ClassBT extends AbstractBehavioural {
 
     @Override
     public String toString() {
-        return "ClassBT{" +
-                "serializationInfo=" + serializationInfo +
-                '}';
+        return serializationInfo.toString();
     }
 }

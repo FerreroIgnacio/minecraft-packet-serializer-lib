@@ -3,16 +3,14 @@ package Behaviourals;
 import Generic.GenericPath;
 import Serialization.PacketField;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
-    private final Map<String, AbstractBehavioural> children;
+    private final LinkedHashMap<String, AbstractBehavioural> children;
     private GenericPath path;
 
-    public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
+    public AbstractBehavioural(LinkedHashMap<String, AbstractBehavioural> children) {
         this.children = children;
         this.path = new GenericPath();
         for(Map.Entry<String, AbstractBehavioural> childEntry : children.entrySet()) {
@@ -21,7 +19,7 @@ public abstract class AbstractBehavioural {
     }
 
     public AbstractBehavioural() {
-        this(Collections.emptyMap());
+        this(new LinkedHashMap<>());
     }
 
     private void setFather(String keyOfSelf, AbstractBehavioural father) {

@@ -26,7 +26,7 @@ public enum BehaviouralFactory {
     CONTAINER("container"){
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
-            Map<String, AbstractBehavioural> children = new HashMap<>();
+            LinkedHashMap<String, AbstractBehavioural> children = new LinkedHashMap<>();
             for(Map<String, Object> node : l ) {
                 AbstractBehavioural child = createBehavioural(node.get("type"));
                 children.put((String)node.get("name"), child);

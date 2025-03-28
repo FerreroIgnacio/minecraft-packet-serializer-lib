@@ -2,12 +2,13 @@ package Behaviourals;
 
 import Serialization.PacketField;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ContainerBT extends AbstractBehavioural {
-    public ContainerBT(Map<String, AbstractBehavioural> children) {
+    public ContainerBT(LinkedHashMap<String, AbstractBehavioural> children) {
         super(children);
     }
 

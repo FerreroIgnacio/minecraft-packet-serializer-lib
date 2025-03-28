@@ -8,10 +8,7 @@ import SerializationInfo.Refs.DeserializerRef;
 import SerializationInfo.Refs.SerializerRef;
 import SerializationInfo.SerializationInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BitfieldBT extends AbstractBehavioural {
 
@@ -19,7 +16,7 @@ public class BitfieldBT extends AbstractBehavioural {
     Map<String, Boolean> signed;
     public BitfieldBT(Map<String, Integer> size,
                       Map<String, Boolean> signed) {
-        super(Collections.emptyMap());
+        super(new LinkedHashMap<>());
         this.signed = signed;
         this.sizes = size;
     }

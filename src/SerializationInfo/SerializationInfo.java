@@ -30,4 +30,9 @@ public class SerializationInfo {
     public DeserializerRef getDeserializerRef() {
         return deserializerRef;
     }
+
+    @Override
+    public String toString() {
+        return classDescriptor + " #" + serializerRef + " #" + deserializerRef;
+    }
 }
