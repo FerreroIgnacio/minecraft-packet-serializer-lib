@@ -1,5 +1,6 @@
 package Behaviourals;
 
+import Generic.BehaviouralNavigationException;
 import Generic.GenericPath;
 import Serialization.PacketField;
 
@@ -46,4 +47,25 @@ public abstract class AbstractBehavioural {
     }
 
     public abstract List<PacketField> asPacketFields();
+
+    protected AbstractBehavioural resolvePath(GenericPath path) {
+        GenericPath currentPath = this.path;
+
+        if(path.toString().equals("/")) {
+            return this;
+        }
+        if(path.getFirstSegment().equals("..")){
+            if(father == null)
+                throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
+            return father.resolvePath(path.consumeFirst());
+        }
+        if(children.containsKey(path.getFirstSegment())){
+            return children.get(path.getFirstSegment()).resolvePath(path.consumeFirst());
+        } else {
+            throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + children.keySet() + " are available");
+        }
+    }
+    protected AbstractBehavioural resolvePath(String pathString) {
+        return resolvePath(new GenericPath(pathString));
+    }
 }

@@ -9,12 +9,12 @@ public class GenericPath {
     public GenericPath(List<String> segments) {
         this.segments = List.copyOf(segments);
     }
-    public GenericPath(String... segments) {
-        this.segments = Arrays.asList(segments);
+    public GenericPath(String path) {
+        this.segments = Arrays.asList(path.split("/"));
     }
     public GenericPath() {
         this.segments = new ArrayList<>();
-        segments.add("");
+       // segments.add("");
     }
     public GenericPath(List<String> segments, String... extraSegments) {
         List<String> segmentsCopy = new ArrayList<>(segments);
@@ -24,13 +24,19 @@ public class GenericPath {
 
     @Override
     public String toString() {
-        return String.join("/", segments);
+        return "/" + String.join("/", segments);
     }
     public String getLastSegment() {
         return segments.getLast();
     }
+    public String getFirstSegment() {
+        return segments.getFirst();
+    }
 
     public GenericPath append(String segment) {
         return new GenericPath(segments, segment);
+    }
+    public GenericPath consumeFirst(){
+        return new GenericPath(segments.subList(1, segments.size()));
     }
 }

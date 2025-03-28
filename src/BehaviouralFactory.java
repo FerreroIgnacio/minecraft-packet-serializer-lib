@@ -33,7 +33,9 @@ public enum BehaviouralFactory {
             }
             return new ContainerBT(children);
         }
-    };
+    },
+
+    ;
 
 
     private final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
