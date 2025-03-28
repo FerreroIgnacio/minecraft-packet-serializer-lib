@@ -1,5 +1,4 @@
-import Behaviourals.BehaviouralType;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import Behaviourals.AbstractBehavioural;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,7 +9,7 @@ public class JsonMapper {
     @JsonProperty("types")
     public void SetTypes(Map<String, Object> types){
         for(Map.Entry<String, Object> entry: types.entrySet()) {
-            BehaviouralType bh = null;
+            AbstractBehavioural bh = null;
             if (entry.getValue() instanceof String s && s.equals("native")) {
                 try {
                     BehaviouralFactory.valueOf(entry.getKey().toUpperCase());

@@ -3,9 +3,8 @@ package Behaviourals;
 import SerializationInfo.SerializationInfo;
 
 import java.util.List;
-import java.util.Map;
 
-public class ClassBT extends BehaviouralType{
+public class ClassBT extends AbstractBehavioural {
 
     SerializationInfo serializationInfo;
 

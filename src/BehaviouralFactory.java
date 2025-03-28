@@ -4,14 +4,13 @@ import SerializationInfo.Refs.DeserializerRef;
 import SerializationInfo.Refs.SerializerRef;
 import SerializationInfo.SerializationInfo;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public enum BehaviouralFactory {
     BITFIELD("bitfield"){
         @Override
-        protected BehaviouralType build(List<Map<String, Object>> l) {
+        protected AbstractBehavioural build(List<Map<String, Object>> l) {
             Map<String, Integer> sizes = new LinkedHashMap<>();
             Map<String, Boolean> signed = new LinkedHashMap<>();
             for(Map<String, Object> node : l) {
@@ -23,10 +22,10 @@ public enum BehaviouralFactory {
     },
     CONTAINER("container"){
         @Override
-        protected BehaviouralType build(List<Map<String, Object>> l) {
-            Map<String, BehaviouralType> children = new HashMap<>();
+        protected AbstractBehavioural build(List<Map<String, Object>> l) {
+            Map<String, AbstractBehavioural> children = new HashMap<>();
             for(Map<String, Object> node : l ) {
-                BehaviouralType child = createBehavioural(node.get("type"));
+                AbstractBehavioural child = createBehavioural(node.get("type"));
                 children.put((String)node.get("name"), child);
             }
             return new ContainerBT(children);
@@ -34,7 +33,7 @@ public enum BehaviouralFactory {
     };
 
 
-    private final static Map<String, BehaviouralType> knownBehaviourals = new LinkedHashMap<>();
+    private final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
     static {
         for(Natives n : Natives.values()) {
       //      knownBehaviourals.put(n.getNameInJson(), new ClassBT(n.getSerializationInfo()));
@@ -50,19 +49,19 @@ public enum BehaviouralFactory {
         return jsonName;
     }
 
-    public static void addKnownBehavioural(String key, BehaviouralType behavioural) {
+    public static void addKnownBehavioural(String key, AbstractBehavioural behavioural) {
         knownBehaviourals.put(key, behavioural);
     }
 
-    protected BehaviouralType build(Map<String, Object> map){
+    protected AbstractBehavioural build(Map<String, Object> map){
         throw new RuntimeException("Attempting to create " + this
                 + " from map");
     }
-    protected BehaviouralType build(List<Map<String, Object>> l){
+    protected AbstractBehavioural build(List<Map<String, Object>> l){
         throw new RuntimeException("Attempting to create " + this
                 + " from list");
     }
-    private BehaviouralType objectBuild(Object o){
+    private AbstractBehavioural objectBuild(Object o){
         switch (o){
             case List<?> l: {
                 return this.build((List<Map<String, Object>>)l);
@@ -79,7 +78,7 @@ public enum BehaviouralFactory {
         }
     }
 
-    public static BehaviouralType createBehavioural(Object o) {
+    public static AbstractBehavioural createBehavioural(Object o) {
         switch(o){
             case List<?> l: {
                 String s = (String)l.getFirst();
@@ -88,7 +87,7 @@ public enum BehaviouralFactory {
                     BehaviouralFactory factory = BehaviouralFactory.valueOf(s.toUpperCase());
                     return factory.objectBuild(typeObject);
                 } catch(IllegalArgumentException e){
-                    return new BehaviouralType() {
+                    return new AbstractBehavioural() {
                         @Override
                         public List<PacketField> asPacketFields() {
                             return List.of();

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class BitfieldBT extends BehaviouralType{
+public class BitfieldBT extends AbstractBehavioural {
 
     Map<String, Integer> sizes;
     Map<String, Boolean> signed;

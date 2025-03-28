@@ -4,31 +4,31 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BehaviouralType {
-    private BehaviouralType father;
-    private final Map<String, BehaviouralType> children;
+public abstract class AbstractBehavioural {
+    private AbstractBehavioural father;
+    private final Map<String, AbstractBehavioural> children;
     private GenericPath path;
 
-    public BehaviouralType(Map<String, BehaviouralType> children) {
+    public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
         this.children = children;
         this.path = new GenericPath();
-        for(Map.Entry<String, BehaviouralType> childEntry : children.entrySet()) {
+        for(Map.Entry<String, AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
 
-    public BehaviouralType() {
+    public AbstractBehavioural() {
         this(Collections.emptyMap());
     }
 
-    private void setFather(String keyOfSelf, BehaviouralType father) {
+    private void setFather(String keyOfSelf, AbstractBehavioural father) {
         this.father = father;
         this.updatePath(keyOfSelf);
     }
     private void updatePath(String keyOfSelf) {
-        BehaviouralType father = getFather();
+        AbstractBehavioural father = getFather();
         this.path = father != null ? father.getPath().append(keyOfSelf) : new GenericPath();
-        for(Map.Entry<String, BehaviouralType> childEntry: children.entrySet()){
+        for(Map.Entry<String, AbstractBehavioural> childEntry: children.entrySet()){
             childEntry.getValue().updatePath(childEntry.getKey());
         }
     }
@@ -36,11 +36,11 @@ public abstract class BehaviouralType {
         return path;
     }
 
-    private BehaviouralType getFather() {
+    private AbstractBehavioural getFather() {
         return father;
     }
 
-    public Map<String, BehaviouralType> getChildren() {
+    public Map<String, AbstractBehavioural> getChildren() {
         return children;
     }
 
