@@ -35,6 +35,24 @@ public enum BehaviouralFactory {
             return new ContainerBT(children);
         }
     },
+    SWITCH("switch"){
+        @Override
+        protected AbstractBehavioural build(Map<String, Object> map) {
+            String compareToFieldName = (String) map.get("compareTo");
+            Map<String, AbstractBehavioural> switchFields = new LinkedHashMap<>();
+
+            Map<String, Object> fields = (Map<String, Object>) map.get("fields");
+            for (Map.Entry<String, Object> node : fields.entrySet()) {
+                switchFields.put(node.getKey(), BehaviouralFactory.createBehavioural(node.getValue()));
+            }
+            if (map.get("default") != null) {
+                AbstractBehavioural defaultField = BehaviouralFactory.createBehavioural(map.get("default"));
+                return new SwitchBT(switchFields, compareToFieldName, defaultField);
+            } else {
+                return new SwitchBT(switchFields, compareToFieldName);
+            }
+        }
+    }
 
     ;
 

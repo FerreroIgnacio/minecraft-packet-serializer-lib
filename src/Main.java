@@ -12,7 +12,7 @@ public class Main {
         ObjectMapper aux0 = new ObjectMapper();
         JsonMapper aux = aux0.readValue(new File("minecraft-data/data/" + pcOrBedrock + "/" + version + "/protocol.json"), JsonMapper.class);
         int i = 5;
-
+        JsonMapper.getPacket("packet_boss_bar").getChildren().get("title").asPacketFields();
     }
 
 }

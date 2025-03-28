@@ -4,6 +4,7 @@ public class EqualsComponent implements Condition {
     private final String name;
     private final Integer intValue;
     private final String stringValue;
+    private Boolean negated = false;
     public EqualsComponent(String name, String value) {
         this.name = name;
         this.stringValue = value;
@@ -19,7 +20,13 @@ public class EqualsComponent implements Condition {
     @Override
     public String toString() {
         if(stringValue != null)
-            return "(" + name + ".equals(" + stringValue + ")";
-        return "(" + name + " == " + intValue + ")";
+            return "(" + (negated ? "!" : "") + name + ".equals(" + stringValue + "))";
+        return "(" + name + (negated ? " != " : " == ")  + intValue + ")";
+    }
+
+    @Override
+    public Condition negate() {
+        this.negated = !negated;
+        return this;
     }
 }

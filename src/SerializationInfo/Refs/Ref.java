@@ -13,4 +13,8 @@ public abstract class Ref {
     public String toString() {
         return component.toString();
     }
+
+    public RefComponent getComponent() {
+        return component;
+    }
 }

@@ -20,7 +20,8 @@ public class ContainerBT extends AbstractBehavioural {
                 .map(AbstractBehavioural::asPacketFields)
                 .flatMap(List::stream).collect(Collectors.toList());
     }
-/*
+
+    /*
     @Override
     protected AbstractBehavioural resolvePath(GenericPath path) {
         if(path.toString().equals("/")) {

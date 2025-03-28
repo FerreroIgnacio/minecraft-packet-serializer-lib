@@ -18,4 +18,16 @@ public class PacketField {
                 ", serializationInfo=" + serializationInfo +
                 '}';
     }
+
+    public SerializationInfo getSerializationInfo() {
+        return serializationInfo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PacketField copyWithNewSerializationInfo(SerializationInfo serializationInfo) {
+        return new PacketField(name, serializationInfo);
+    }
 }

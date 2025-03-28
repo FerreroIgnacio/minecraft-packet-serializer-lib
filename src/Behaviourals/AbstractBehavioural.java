@@ -14,7 +14,7 @@ public abstract class AbstractBehavioural {
     public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
         this.children = children;
         this.path = new GenericPath();
-        for(Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
+        for (Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
@@ -27,13 +27,15 @@ public abstract class AbstractBehavioural {
         this.father = father;
         this.updatePath(keyOfSelf);
     }
+
     protected void updatePath(String keyOfSelf) {
         AbstractBehavioural father = getFather();
         this.path = father != null ? father.getPath().append(keyOfSelf) : new GenericPath();
-        for(Map.Entry<String, ? extends AbstractBehavioural> childEntry: children.entrySet()){
+        for (Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().updatePath(childEntry.getKey());
         }
     }
+
     public GenericPath getPath() {
         return path;
     }
@@ -42,30 +44,43 @@ public abstract class AbstractBehavioural {
         return father;
     }
 
-    public Map<String, ? extends AbstractBehavioural> getChildren() {
+    public Map<String, AbstractBehavioural> getChildren() {
         return children;
     }
 
     public abstract List<PacketField> asPacketFields();
-/*
-    protected AbstractBehavioural resolvePath(GenericPath path) {
-        if(path.toString().equals("/")) {
-            return this;
+
+    /*
+        protected AbstractBehavioural resolvePath(GenericPath path) {
+            if(path.toString().equals("/")) {
+                return this;
+            }
+            if(path.getFirstSegment().equals("..")){
+                if(father == null)
+                    throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
+                return father.resolvePath(path);
+            }
+            if(father.getChildren().containsKey(path.getFirstSegment())){
+                return father.getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
+            } else {
+                throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + children.keySet() + " are available");
+            }
         }
-        if(path.getFirstSegment().equals("..")){
-            if(father == null)
-                throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
-            return father.resolvePath(path);
+        protected AbstractBehavioural resolvePath(String pathString) {
+            return resolvePath(new GenericPath(pathString));
         }
-        if(father.getChildren().containsKey(path.getFirstSegment())){
-            return father.getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
-        } else {
-            throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + children.keySet() + " are available");
-        }
+        */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getChildren());
     }
-    protected AbstractBehavioural resolvePath(String pathString) {
-        return resolvePath(new GenericPath(pathString));
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        AbstractBehavioural that = (AbstractBehavioural) obj;
+        return Objects.equals(children, that.children);
     }
-    */
+
 
 }
