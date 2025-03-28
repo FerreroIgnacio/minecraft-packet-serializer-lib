@@ -8,10 +8,10 @@ import java.util.*;
 
 public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
-    private final LinkedHashMap<String, ? extends AbstractBehavioural> children;
+    private final Map<String, AbstractBehavioural> children;
     private GenericPath path;
 
-    public AbstractBehavioural(LinkedHashMap<String, ? extends AbstractBehavioural> children) {
+    public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
         this.children = children;
         this.path = new GenericPath();
         for(Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {

@@ -13,7 +13,7 @@ import java.util.*;
 public class BitfieldBT extends AbstractBehavioural {
 
 
-    public BitfieldBT(LinkedHashMap<String, BitfieldComponentBT> children) {
+    public BitfieldBT(Map<String, AbstractBehavioural> children) {
         super(children);
     }
     public List<PacketField> asPacketFields() {

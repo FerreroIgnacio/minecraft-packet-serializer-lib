@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ContainerBT extends AbstractBehavioural {
-    public ContainerBT(LinkedHashMap<String, AbstractBehavioural> children) {
+    public ContainerBT(Map<String, AbstractBehavioural> children) {
         super(children);
     }
 

@@ -15,7 +15,7 @@ public enum BehaviouralFactory {
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
 
-            LinkedHashMap<String, BitfieldComponentBT> children = new LinkedHashMap<>();
+            LinkedHashMap<String, AbstractBehavioural> children = new LinkedHashMap<>();
             for(Map<String, Object> node : l) {
                 int size = (Integer)node.get("size");
                 boolean signed = (Boolean)node.get("signed");
