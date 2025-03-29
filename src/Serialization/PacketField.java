@@ -26,8 +26,4 @@ public class PacketField {
     public String getName() {
         return name;
     }
-
-    public PacketField copyWithNewSerializationInfo(SerializationInfo serializationInfo) {
-        return new PacketField(name, serializationInfo);
-    }
 }

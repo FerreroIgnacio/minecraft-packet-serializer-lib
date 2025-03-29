@@ -10,6 +10,7 @@ public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
     private final Map<String, AbstractBehavioural> children;
     private GenericPath path;
+    private String name;
 
     public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
         this.children = children;
@@ -17,10 +18,11 @@ public abstract class AbstractBehavioural {
         for (Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
+        this.name = "";
     }
 
     public AbstractBehavioural() {
-        this(new LinkedHashMap<>());
+        this(Collections.emptyMap());
     }
 
     protected void setFather(String keyOfSelf, AbstractBehavioural father) {
@@ -31,6 +33,7 @@ public abstract class AbstractBehavioural {
     protected void updatePath(String keyOfSelf) {
         AbstractBehavioural father = getFather();
         this.path = father != null ? father.getPath().append(keyOfSelf) : new GenericPath();
+        this.name = path.getLastSegment();
         for (Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().updatePath(childEntry.getKey());
         }
@@ -70,6 +73,10 @@ public abstract class AbstractBehavioural {
             return resolvePath(new GenericPath(pathString));
         }
         */
+    protected String getName(){
+        return path.getLastSegment();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getChildren());
@@ -81,6 +88,4 @@ public abstract class AbstractBehavioural {
         AbstractBehavioural that = (AbstractBehavioural) obj;
         return Objects.equals(children, that.children);
     }
-
-
 }

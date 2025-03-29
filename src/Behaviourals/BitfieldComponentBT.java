@@ -30,10 +30,12 @@ public class BitfieldComponentBT extends AbstractBehavioural{
 
     @Override
     public List<PacketField> asPacketFields() {
-        GenericPath p = getPath();
-        String name = p.getLastSegment();
-        //   String name = p.getIndexSegment(p.getLength() - 2) + "_" + p.getLastSegment();
         SerializationInfo aux = new SerializationInfo(Integer.class, new SerializerRef(new UnsafeComponent("")), new DeserializerRef(new UnsafeComponent("")));
-        return List.of(new PacketField(name, aux));
+        return List.of(new PacketField(this.getName(), aux));
+    }
+
+    @Override
+    protected String getName() {
+        return getPath().getIndexSegment(getPath().getLength() - 2) + "_" + getPath().getLastSegment();
     }
 }

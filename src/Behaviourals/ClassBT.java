@@ -22,7 +22,7 @@ public class ClassBT extends AbstractBehavioural {
         if(serializationInfo.getClassDescriptor().equals(voidClassDesc))
             return Collections.emptyList();
         return List.of(new PacketField(
-                super.getPath().getLastSegment(),
+                getName(),
                 serializationInfo)
         );
     }
