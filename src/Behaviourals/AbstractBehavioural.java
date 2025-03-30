@@ -19,8 +19,8 @@ public abstract class AbstractBehavioural {
     public AbstractBehavioural(Map<String, AbstractBehavioural> children, boolean hiddenChildren) {
         this.children = children;
         this.hiddenChildren = hiddenChildren;
-        this.name = getName();
         this.path = new GenericPath();
+        this.name = getName();
         for(Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
@@ -57,11 +57,7 @@ public abstract class AbstractBehavioural {
     }
 
     public Map<String, AbstractBehavioural> getChildren() {
-        if(hiddenChildren)
-            throw new BehaviouralNavigationException("Attempting to access hidden children of " + this);
-        if(children.isEmpty())
-            throw new BehaviouralNavigationException("Attempting to access empty children of " + this);
-        return children;
+       return children;
     }
 
     public abstract List<PacketField> asPacketFields();

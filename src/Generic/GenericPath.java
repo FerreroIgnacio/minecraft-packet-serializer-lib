@@ -23,7 +23,8 @@ public class GenericPath {
         return path;
     }
     public String getLastSegment() {
-        return path.substring(path.lastIndexOf('/') + 1);
+        String aux = path.substring(path.lastIndexOf('/') + 1);
+        return aux == null ? "" : aux;
     }
     public String getFirstSegment() {
         String pathStr = path;

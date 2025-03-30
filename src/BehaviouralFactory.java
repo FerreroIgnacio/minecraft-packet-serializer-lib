@@ -11,6 +11,18 @@ import java.util.*;
 import java.util.List;
 
 public enum BehaviouralFactory {
+    ARRAY("array"){
+        @Override
+        protected AbstractBehavioural build(Map<String, Object> map) {
+            AbstractBehavioural type = BehaviouralFactory.createBehavioural(map.get("type"));
+            Object countType = map.get("countType");
+            if(countType == null){
+                String countFieldPath = (String)map.get("count");
+                return new ArrayBT(countFieldPath, type);
+            }
+            return new ArrayBT(BehaviouralFactory.createBehavioural(countType), type);
+        }
+    },
     BITFIELD("bitfield"){
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {

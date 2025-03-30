@@ -36,6 +36,9 @@ public class BitfieldComponentBT extends AbstractBehavioural{
 
     @Override
     protected String getName() {
+        if(getPath().getLength() < 2){
+            return getPath().getLastSegment();
+        }
         return getPath().getIndexSegment(getPath().getLength() - 2) + "_" + getPath().getLastSegment();
     }
 }
