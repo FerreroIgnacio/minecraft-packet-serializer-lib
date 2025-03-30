@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jackson-annotations-2.14.0" level="application" />
+    <orderEntry type="library" name="guava-33.4.0-jre" level="project" />
   </component>
 </module>

@@ -20,22 +20,18 @@ public class ContainerBT extends AbstractBehavioural {
                 .map(AbstractBehavioural::asPacketFields)
                 .flatMap(List::stream).collect(Collectors.toList());
     }
-
-    /*
+/*
     @Override
-    protected AbstractBehavioural resolvePath(GenericPath path) {
-        if(path.toString().equals("/")) {
+    public AbstractBehavioural resolvePath(GenericPath path) {
+        if (path.toString().isEmpty())
             return this;
-        }
-        if(path.getFirstSegment().equals("..")){
-            if(getFather() == null)
-                throw new BehaviouralNavigationException("Attempting to acess father of fatherless behavioural");
+        if (path.toString().startsWith("..")) {
+            if (getFather() == null) {
+                throw new BehaviouralNavigationException("Attempting to access father of fatherless object");
+            }
             return getFather().resolvePath(path.consumeFirst());
-        }
-        if(getChildren().containsKey(path.getFirstSegment())){
-            return getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
         } else {
-            throw new BehaviouralNavigationException("Attempting to access child " +path.getFirstSegment() + " but only " + getChildren().keySet() + " are available");
+            return getChildren().get(path.getFirstSegment()).resolvePath(path.consumeFirst());
         }
     }
     */

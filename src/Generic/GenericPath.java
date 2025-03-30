@@ -5,45 +5,51 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GenericPath {
-    private final List<String> segments;
-    public GenericPath(List<String> segments) {
+   // private final List<String> segments;
+    private final String path;
+  /*  public GenericPath(List<String> segments) {
         this.segments = List.copyOf(segments);
-    }
+    }*/
     public GenericPath(String path) {
-        this.segments = Arrays.asList(path.split("/"));
+        this.path = path;
     }
     public GenericPath() {
-        this.segments = new ArrayList<>();
+        this.path = "";
        // segments.add("");
-    }
-    public GenericPath(List<String> segments, String... extraSegments) {
-        List<String> segmentsCopy = new ArrayList<>(segments);
-        segmentsCopy.addAll(Arrays.asList(extraSegments));
-        this.segments = segmentsCopy;
     }
 
     @Override
     public String toString() {
-        return "/" + String.join("/", segments);
+        return path;
     }
     public String getLastSegment() {
-        return segments.getLast();
+        return path.substring(path.lastIndexOf('/') + 1);
     }
     public String getFirstSegment() {
-        return segments.getFirst();
+        String pathStr = path;
+        if(path.startsWith("/"))
+            pathStr = pathStr.substring(1);
+        if(pathStr.indexOf('/') == -1)
+            return pathStr;
+        return pathStr.substring(0, pathStr.indexOf('/'));
     }
 
     public GenericPath append(String segment) {
-        return new GenericPath(segments, segment);
+        return new GenericPath(path + (path.isEmpty() ? "" : "/") + segment);
     }
-    public GenericPath consumeFirst(){
-        return new GenericPath(segments.subList(1, segments.size()));
+    public GenericPath consumeFirst() {
+        if (path.isEmpty()) return this;
+
+        String pathStr = path.startsWith("/") ? path.substring(1) : path;
+        int index = pathStr.indexOf('/');
+
+        return index == -1 ? new GenericPath("") : new GenericPath(pathStr.substring(index + 1));
     }
 
     public int getLength() {
-        return segments.size();
+        return path.split("/").length;
     }
     public String getIndexSegment(int index) {
-        return segments.get(index);
+        return path.split("/")[index];
     }
 }

@@ -57,7 +57,7 @@ public enum BehaviouralFactory {
     ;
 
 
-    private final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
+    public final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
     static {
         for(Natives n : Natives.values()) {
       //      knownBehaviourals.put(n.getNameInJson(), new ClassBT(n.getSerializationInfo()));

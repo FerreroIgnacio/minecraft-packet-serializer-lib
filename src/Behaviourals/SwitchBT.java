@@ -39,6 +39,8 @@ public class SwitchBT extends AbstractBehavioural{
         List<PacketField> fields = new ArrayList<>();
         UnsafeComponent nul =  new UnsafeComponent("null");
 
+        String finalCompareToName = resolvePath(compareToPath).getName();
+
         for(Map.Entry<AbstractBehavioural, List<String>> entry : cachedChildren.entrySet()) {
             List<String> switchValues = entry.getValue();
             AbstractBehavioural bh = entry.getKey();
@@ -46,7 +48,7 @@ public class SwitchBT extends AbstractBehavioural{
                 RefComponent dRcomp = p.getSerializationInfo().getDeserializerRef().getComponent();
                 RefComponent sRcomp = p.getSerializationInfo().getSerializerRef().getComponent();
 
-                String compareToFinalName = compareToPath;
+                String compareToFinalName = finalCompareToName;
                 List<Condition> conditions = new ArrayList<>();
                 for(String s : switchValues) {
                     conditions.add(new EqualsComponent(compareToFinalName, s));
@@ -58,7 +60,7 @@ public class SwitchBT extends AbstractBehavioural{
                 TernaryRefComponent newSerializerRefComp = new TernaryRefComponent(conditions, sRcomp, nul, "||");
 
                 SerializationInfo fieldInfo = new SerializationInfo(p.getSerializationInfo().getClassDescriptor(), new SerializerRef(newSerializerRefComp), new DeserializerRef(newDeserializerRefComp));
-                return new PacketField(p.getName(), fieldInfo);
+                return new PacketField(cachedChildren.entrySet().size() > 1 ? this.getName()+ "_" + p.getName() : this.getName(), fieldInfo);
             }).toList();
             fields.addAll(packetList);
         }

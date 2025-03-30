@@ -1,5 +1,7 @@
 package Behaviourals;
 
+import Generic.BehaviouralNavigationException;
+import Generic.GenericPath;
 import Serialization.Natives;
 import Serialization.PacketField;
 import SerializationInfo.Refs.Components.EqualsComponent;
@@ -83,3 +85,4 @@ public class BitfieldBT extends AbstractBehavioural {
         return returnList;
     }
 }
+

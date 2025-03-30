@@ -1,3 +1,4 @@
+import Generic.GenericPath;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -13,6 +14,10 @@ public class Main {
         JsonMapper aux = aux0.readValue(new File("minecraft-data/data/" + pcOrBedrock + "/" + version + "/protocol.json"), JsonMapper.class);
         int i = 5;
         JsonMapper.getPacket("packet_boss_bar").getChildren().get("title").asPacketFields();
+        BehaviouralFactory.knownBehaviourals.get("command_node").getChildren().get("redirectNode").resolvePath(new GenericPath("flags"));
+
+        BehaviouralFactory.knownBehaviourals.get("command_node").getChildren().get("redirectNode").resolvePath(new GenericPath("flags/has_redirect_node"));
+        BehaviouralFactory.knownBehaviourals.get("command_node").asPacketFields();
     }
 
 }

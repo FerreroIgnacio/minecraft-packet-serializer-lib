@@ -13,10 +13,11 @@ public class PacketField {
 
     @Override
     public String toString() {
-        return "PacketField{" +
+     /*   return "PacketField{" +
                 "name='" + name + '\'' +
                 ", serializationInfo=" + serializationInfo +
-                '}';
+                '}';*/
+        return serializationInfo.getClassDescriptor() + " " + name + " = " + serializationInfo.getDeserializerRef();
     }
 
     public SerializationInfo getSerializationInfo() {
