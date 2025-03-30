@@ -60,7 +60,7 @@ public class SwitchBT extends AbstractBehavioural{
                 TernaryRefComponent newSerializerRefComp = new TernaryRefComponent(conditions, sRcomp, nul, "||");
 
                 SerializationInfo fieldInfo = new SerializationInfo(p.getSerializationInfo().getClassDescriptor(), new SerializerRef(newSerializerRefComp), new DeserializerRef(newDeserializerRefComp));
-                return new PacketField(cachedChildren.entrySet().size() > 1 ? this.getName()+ "_" + p.getName() : this.getName(), fieldInfo);
+                return new PacketField(cachedChildren.size() > 1 ? this.getName()+ "_" + p.getName() : this.getName(), fieldInfo);
             }).toList();
             fields.addAll(packetList);
         }

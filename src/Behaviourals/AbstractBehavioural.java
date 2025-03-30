@@ -11,16 +11,21 @@ public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
     private final Map<String, AbstractBehavioural> children;
     private GenericPath path;
-    private String name;
-
+    private final String name;
+    private final boolean hiddenChildren;
     public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
+        this(children, false);
+    }
+    public AbstractBehavioural(Map<String, AbstractBehavioural> children, boolean hiddenChildren) {
         this.children = children;
+        this.hiddenChildren = hiddenChildren;
+        this.name = getName();
         this.path = new GenericPath();
-        for (Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
+        for(Map.Entry<String, ? extends AbstractBehavioural> childEntry : children.entrySet()) {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
-        this.name = "";
     }
+
 
     public AbstractBehavioural() {
         this(Collections.emptyMap());
