@@ -7,7 +7,7 @@ public class ArrayBT extends AbstractBehavioural{
     String countFieldPath;
 
     public ArrayBT(AbstractBehavioural countType, AbstractBehavioural children) {
-        super(Map.of("content", children));
+        super(Map.of("content", children), true);
         this.countType = countType;
         this.countFieldPath = countFieldPath;
     }

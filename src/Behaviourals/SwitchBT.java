@@ -13,7 +13,7 @@ public class SwitchBT extends AbstractBehavioural{
     private final String compareToPath;
     private final AbstractBehavioural defaultBehavioural;
     public SwitchBT(Map<String, AbstractBehavioural> cases, String compareToPath, AbstractBehavioural defaultBehavioural) {
-        super(cases);
+        super(cases, true);
         getChildren().put("default", defaultBehavioural);
         defaultBehavioural.setFather("default", this);
         this.compareToPath = compareToPath;
