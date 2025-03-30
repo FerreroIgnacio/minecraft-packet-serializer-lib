@@ -9,7 +9,7 @@ import java.util.Map;
 public class JsonMapper {
 
 
-    private static final Map<String, Map<String, Map<String, AbstractBehavioural>>> packets = new LinkedHashMap<>();
+    private final Map<String, Map<String, Map<String, AbstractBehavioural>>> packets = new LinkedHashMap<>();
 
     private static Map<String, AbstractBehavioural> flattenPackets(Map<String, Map<String, Map<String, AbstractBehavioural>>> packets) {
         Map<String, AbstractBehavioural> flatMap = new LinkedHashMap<>();
@@ -46,7 +46,7 @@ public class JsonMapper {
 
         return flatMap;
     }
-    public static AbstractBehavioural getPacket(String name){
+    public AbstractBehavioural getPacket(String name){
         return flattenPackets(packets).get(name);
     }
 

@@ -43,18 +43,17 @@ public class SwitchBT extends AbstractBehavioural{
 
         for(Map.Entry<AbstractBehavioural, List<String>> entry : cachedChildren.entrySet()) {
             List<String> switchValues = entry.getValue();
+            for(String s : switchValues) {
+                negatedTotalConditions.add(new EqualsComponent(finalCompareToName, s).negate());
+            }
             AbstractBehavioural bh = entry.getKey();
             List<PacketField> packetList = entry.getKey().asPacketFields().stream().map(p -> {
                 RefComponent dRcomp = p.getSerializationInfo().getDeserializerRef().getComponent();
                 RefComponent sRcomp = p.getSerializationInfo().getSerializerRef().getComponent();
 
-                String compareToFinalName = finalCompareToName;
                 List<Condition> conditions = new ArrayList<>();
                 for(String s : switchValues) {
-                    conditions.add(new EqualsComponent(compareToFinalName, s));
-                //    if (!s.equals("default")) {
-                        negatedTotalConditions.add(new EqualsComponent(compareToFinalName, s).negate());
-                //    }
+                    conditions.add(new EqualsComponent(finalCompareToName, s));
                 }
                 TernaryRefComponent newDeserializerRefComp = new TernaryRefComponent(conditions, dRcomp, nul, "||");
                 TernaryRefComponent newSerializerRefComp = new TernaryRefComponent(conditions, sRcomp, nul, "||");

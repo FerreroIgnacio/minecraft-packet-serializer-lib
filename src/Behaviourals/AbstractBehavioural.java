@@ -78,6 +78,9 @@ public abstract class AbstractBehavioural {
         // If this is a ContainerBT or BitfieldBT, navigate its children
         if (this instanceof ContainerBT || this instanceof BitfieldBT) {
             AbstractBehavioural child = getChildren().get(firstSegment);
+            if(hiddenChildren){
+           //     throw new BehaviouralNavigationException("Attempting to access child of hidden children of " + this);
+            }
             if (child != null) {
                 return child.resolvePath(path.consumeFirst());
             }
@@ -115,7 +118,7 @@ public abstract class AbstractBehavioural {
     }
 
     @VisibleForTesting
-    private AbstractBehavioural get(String key) {
+    public AbstractBehavioural get(String key) {
         if(children.containsKey(key)) {
             return children.get(key);
         }

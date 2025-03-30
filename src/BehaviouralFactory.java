@@ -17,8 +17,18 @@ public enum BehaviouralFactory {
             AbstractBehavioural type = BehaviouralFactory.createBehavioural(map.get("type"));
             Object countType = map.get("countType");
             if(countType == null){
-                String countFieldPath = (String)map.get("count");
-                return new ArrayBT(countFieldPath, type);
+                Object fixedCountOrPath = map.get("count");
+                switch (fixedCountOrPath){
+                    case Integer i: {
+                        return new ArrayBT(i, type);
+                    }
+                    case String s: {
+                        return new ArrayBT(s, type);
+                    }
+                    default: {
+                        throw new UnexpectedJsonFormatException("Array count of unexpected type: " + fixedCountOrPath.getClass() + fixedCountOrPath);
+                    }
+                }
             }
             return new ArrayBT(BehaviouralFactory.createBehavioural(countType), type);
         }
@@ -70,11 +80,6 @@ public enum BehaviouralFactory {
 
 
     public final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
-    static {
-        for(Natives n : Natives.values()) {
-      //      knownBehaviourals.put(n.getNameInJson(), new ClassBT(n.getSerializationInfo()));
-        }
-    }
 
     private final String jsonName;
     BehaviouralFactory(String jsonName) {

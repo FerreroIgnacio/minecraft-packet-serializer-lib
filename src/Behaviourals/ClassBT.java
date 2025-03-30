@@ -9,7 +9,7 @@ import SerializationInfo.ClassDescriptor;
 
 public class ClassBT extends AbstractBehavioural {
 
-    SerializationInfo serializationInfo;
+    private final SerializationInfo serializationInfo;
 
     public ClassBT(SerializationInfo serializationInfo) {
         super();
@@ -25,6 +25,10 @@ public class ClassBT extends AbstractBehavioural {
                 getName(),
                 serializationInfo)
         );
+    }
+
+    public SerializationInfo getSerializationInfo() {
+        return serializationInfo;
     }
 
     @Override
