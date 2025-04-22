@@ -45,6 +45,26 @@ public enum BehaviouralFactory {
             return new MapperBT(mapp, type);
       }
     },
+    BUFFER("buffer"){
+        protected AbstractBehavioural build(Map<String, Object> map) {
+            if(map.get("countType") != null){
+                ClassBT type = (ClassBT) BehaviouralFactory.createBehavioural(map.get("countType"));
+                return new BufferBT(type);
+            } else {
+                switch(map.get("count")){
+                    case Integer i: { return new BufferBT(i);}
+                    case String s: { return new BufferBT(s);}
+                    default: { throw new UnexpectedJsonFormatException("Count of unexpected type: " + map.get("count")); }
+                }
+            }
+        }
+    },
+    OPTION("option"){
+        protected AbstractBehavioural build(List<Map<String, Object>> l) {
+            AbstractBehavioural type = BehaviouralFactory.createBehavioural(l.getFirst());
+            return new OptionBT(type);
+        }
+    },
     BITFIELD("bitfield"){
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
@@ -142,6 +162,9 @@ public enum BehaviouralFactory {
                 Object typeObject = l.getLast();
                 try{
                     BehaviouralFactory factory = BehaviouralFactory.valueOf(s.toUpperCase());
+                    if(s.equals("option")){
+                        return new OptionBT(factory.objectBuild(typeObject));
+                    }
                     return factory.objectBuild(typeObject);
                 } catch(IllegalArgumentException e){
                     return new AbstractBehavioural() {

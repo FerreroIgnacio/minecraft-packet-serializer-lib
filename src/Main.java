@@ -45,6 +45,7 @@ public class Main {
         for(Map.Entry<String,File> entry: protocolsFileMap.entrySet()) {
             try {
                 JsonMapper versionMappedProtocol = mapper.readValue(entry.getValue(), JsonMapper.class);
+             //   versionMappedProtocol;
                 versionProtocols.put(entry.getKey(), versionMappedProtocol);
 
 

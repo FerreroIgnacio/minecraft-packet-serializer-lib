@@ -77,4 +77,19 @@ public class SwitchBT extends AbstractBehavioural{
         }
         return fields;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        SwitchBT that = (SwitchBT) obj;
+        if (defaultBehavioural != null) {
+            if (!this.defaultBehavioural.equals(that.defaultBehavioural))
+                return false;
+        } else if (that.defaultBehavioural != null) {
+            return false;
+        }
+        return this.compareToPath.equals(that.compareToPath)
+                && getChildren().equals(that.getChildren());
+    }
 }

@@ -158,4 +158,17 @@ public abstract class AbstractBehavioural {
         }
         return true;
     }
+    @VisibleForTesting
+    public AbstractBehavioural getUnbuiltReason() {
+        for (AbstractBehavioural child : children.values()) {
+            // if child itself is unbuildable…
+            if (!child.isBuildable()) {
+                // see if there’s a deeper cause…
+                AbstractBehavioural deeper = child.getUnbuiltReason();
+                return (deeper != null) ? deeper : child;
+            }
+        }
+        // no unbuildable children means this subtree is fine
+        return this;
+    }
 }
