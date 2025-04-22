@@ -11,6 +11,9 @@ import com.google.common.annotations.VisibleForTesting;
 public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
     private final LinkedHashMap<String, AbstractBehavioural> children;
+
+
+
     private GenericPath path;
     private String name;
     private final boolean hiddenChildren;
@@ -26,6 +29,7 @@ public abstract class AbstractBehavioural {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
+
 
 
     public AbstractBehavioural() {
@@ -129,6 +133,9 @@ public abstract class AbstractBehavioural {
         return this.getClass().getSimpleName() + "@" + System.identityHashCode(this) + children.keySet().toString();
     }
 
+
+
+
     @VisibleForTesting
     public AbstractBehavioural get(String key) {
         if(children.containsKey(key)) {
@@ -139,5 +146,16 @@ public abstract class AbstractBehavioural {
 
     public List<String> getFieldNames(){
         return new ArrayList<>(children.keySet());
+    }
+
+
+    @VisibleForTesting
+    public boolean isBuildable() {
+        for(AbstractBehavioural child : children.values()) {
+            if(!child.isBuildable()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

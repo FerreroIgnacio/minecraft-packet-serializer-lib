@@ -29,8 +29,10 @@ public class Main {
                 if(!versionNode.getKey().equals("0.30c")) {
                     if(versionNode.getValue().get("protocol") != null) {
                         String versionPath = versionNode.getValue().get("protocol");
-                        File protocol = new File(dataPath + versionPath + "/protocol.json");
-                        protocolsFileMap.put(versionPath.substring(versionPath.indexOf("/") + 1), protocol);
+                        if (versionPath.startsWith("pc")) {
+                            File protocol = new File(dataPath + versionPath + "/protocol.json");
+                            protocolsFileMap.put(versionPath.substring(versionPath.indexOf("/") + 1), protocol);
+                        }
                     }
                 }
             }
@@ -61,15 +63,16 @@ public class Main {
             }
         }
 
-      //  JsonMapper aux = mapper.readValue(new File("minecraft-data/data/" + pcOrBedrock + "/" + version + "/protocol.json"), JsonMapper.class);
-       // int i = 5;
-       /* JsonMapper.getPacket("packet_boss_bar").getChildren().get("title").asPacketFields();
-        BehaviouralFactory.knownBehaviourals.get("command_node").getChildren().get("redirectNode").resolvePath(new GenericPath("flags"));
+        List<Map.Entry<String, AbstractBehavioural>> unbuildableTypes = new ArrayList<>();
+        for(Map.Entry<String, Set<AbstractBehavioural>> entry : globalTypes.entrySet()) {
+            Set<AbstractBehavioural> unbuildableSet = new LinkedHashSet<>();
+            for(AbstractBehavioural type : entry.getValue()) {
+                if(!type.isBuildable()){
+                    unbuildableTypes.add(new AbstractMap.SimpleEntry<>(entry.getKey(), type) {});
+                }
+            }
+        }
 
-        BehaviouralFactory.knownBehaviourals.get("command_node").getChildren().get("redirectNode").resolvePath(new GenericPath("flags/has_redirect_node"));
-        BehaviouralFactory.knownBehaviourals.get("command_node").asPacketFields();
-        var aux2 = BehaviouralFactory.knownBehaviourals.get("Slot").get(null).asPacketFields();
-        System.out.println(aux2);*/
     }
 
 }

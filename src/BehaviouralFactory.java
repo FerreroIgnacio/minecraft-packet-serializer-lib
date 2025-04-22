@@ -33,6 +33,18 @@ public enum BehaviouralFactory {
             return new ArrayBT(BehaviouralFactory.createBehavioural(countType), type);
         }
     },
+    MAPPER("mapper"){
+      @Override
+      protected AbstractBehavioural build(Map<String, Object> map) {
+            ClassBT type = (ClassBT) BehaviouralFactory.createBehavioural(map.get("type"));
+            Map<String, Object> mappings = (Map<String, Object>) map.get("mappings");
+            Map<String, String> mapp = new LinkedHashMap<>();
+            for(Map.Entry<String, Object> entry : mappings.entrySet()){
+                mapp.put(entry.getKey(), entry.getValue().toString());
+            }
+            return new MapperBT(mapp, type);
+      }
+    },
     BITFIELD("bitfield"){
         @Override
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
@@ -133,6 +145,12 @@ public enum BehaviouralFactory {
                     return factory.objectBuild(typeObject);
                 } catch(IllegalArgumentException e){
                     return new AbstractBehavioural() {
+
+                        @Override
+                        public boolean isBuildable() {
+                            return false;
+                        }
+
                         @Override
                         public List<PacketField> asPacketFields() {
                             return List.of();
