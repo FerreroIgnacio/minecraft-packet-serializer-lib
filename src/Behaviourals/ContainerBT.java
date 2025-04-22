@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ContainerBT extends AbstractBehavioural {
-    public ContainerBT(Map<String, AbstractBehavioural> children) {
+    public ContainerBT(LinkedHashMap<String, AbstractBehavioural> children) {
         super(children);
     }
 
@@ -20,6 +20,8 @@ public class ContainerBT extends AbstractBehavioural {
                 .map(AbstractBehavioural::asPacketFields)
                 .flatMap(List::stream).collect(Collectors.toList());
     }
+
+
 /*
     @Override
     public AbstractBehavioural resolvePath(GenericPath path) {

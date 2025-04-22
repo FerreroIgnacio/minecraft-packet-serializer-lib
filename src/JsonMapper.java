@@ -10,7 +10,10 @@ public class JsonMapper {
 
 
     private final Map<String, Map<String, Map<String, AbstractBehavioural>>> packets = new LinkedHashMap<>();
-
+    private final Map<String, AbstractBehavioural> types = new LinkedHashMap<>();
+    {
+        BehaviouralFactory.setKnownBehaviourals(types);
+    }
     private static Map<String, AbstractBehavioural> flattenPackets(Map<String, Map<String, Map<String, AbstractBehavioural>>> packets) {
         Map<String, AbstractBehavioural> flatMap = new LinkedHashMap<>();
 
@@ -59,6 +62,10 @@ public class JsonMapper {
         }
     }
 
+    public Map<String, AbstractBehavioural> getTypes() {
+        return types;
+    }
+
     @JsonProperty("types")
     public void SetTypes(Map<String, Object> types){
         for(Map.Entry<String, Object> entry: types.entrySet()) {
@@ -70,8 +77,9 @@ public class JsonMapper {
                     bh = BehaviouralFactory.createBehavioural(entry.getKey());
                 } else {
                     bh = BehaviouralFactory.createBehavioural(entry.getValue());
+                    BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
                 }
-                BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
+           //     BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
             }
         }
     }

@@ -4,7 +4,10 @@ import Serialization.PacketField;
 import SerializationInfo.SerializationInfo;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import SerializationInfo.ClassDescriptor;
 
 public class ClassBT extends AbstractBehavioural {
@@ -34,5 +37,12 @@ public class ClassBT extends AbstractBehavioural {
     @Override
     public String toString() {
         return serializationInfo.toString();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        ClassBT that = (ClassBT) obj;
+        return this.serializationInfo.equals(that.serializationInfo);
     }
 }

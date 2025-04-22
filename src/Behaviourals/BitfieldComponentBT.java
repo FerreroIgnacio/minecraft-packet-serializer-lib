@@ -9,6 +9,7 @@ import SerializationInfo.SerializationInfo;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class BitfieldComponentBT extends AbstractBehavioural{
 
@@ -41,4 +42,13 @@ public class BitfieldComponentBT extends AbstractBehavioural{
         }
         return getPath().getIndexSegment(getPath().getLength() - 2) + "_" + getPath().getLastSegment();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        BitfieldComponentBT that = (BitfieldComponentBT) obj;
+        return size == that.getSize() && signed == that.isSigned();
+    }
+
 }

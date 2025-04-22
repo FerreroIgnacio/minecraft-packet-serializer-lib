@@ -52,7 +52,8 @@ public enum BehaviouralFactory {
             LinkedHashMap<String, AbstractBehavioural> children = new LinkedHashMap<>();
             for(Map<String, Object> node : l ) {
                 AbstractBehavioural child = createBehavioural(node.get("type"));
-                children.put((String)node.get("name"), child);
+                String key = (String)(node.get("name") == null ? "anon" : node.get("name"));
+                children.put( key , child);
             }
             return new ContainerBT(children);
         }
@@ -61,9 +62,9 @@ public enum BehaviouralFactory {
         @Override
         protected AbstractBehavioural build(Map<String, Object> map) {
             String compareToFieldName = (String) map.get("compareTo");
-            Map<String, AbstractBehavioural> switchFields = new LinkedHashMap<>();
+            LinkedHashMap<String, AbstractBehavioural> switchFields = new LinkedHashMap<>();
 
-            Map<String, Object> fields = (Map<String, Object>) map.get("fields");
+            LinkedHashMap<String, Object> fields = (LinkedHashMap<String, Object>) map.get("fields");
             for (Map.Entry<String, Object> node : fields.entrySet()) {
                 switchFields.put(node.getKey(), BehaviouralFactory.createBehavioural(node.getValue()));
             }
@@ -79,7 +80,10 @@ public enum BehaviouralFactory {
     ;
 
 
-    public final static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
+    public static Map<String, AbstractBehavioural> knownBehaviourals = new LinkedHashMap<>();
+    public static void setKnownBehaviourals(Map<String, AbstractBehavioural> knownBehaviourals) {
+        BehaviouralFactory.knownBehaviourals = knownBehaviourals;
+    }
 
     private final String jsonName;
     BehaviouralFactory(String jsonName) {
@@ -145,7 +149,13 @@ public enum BehaviouralFactory {
                 return createBehavioural(((Map<String, Object>) o).get("type"));
             }
             case String s: {
-
+                try {
+                    Natives n = Natives.valueOf(s.toUpperCase());
+                    return new ClassBT(n.getSerializationInfo());
+                } catch (IllegalArgumentException e) {
+                    return new ReferenceBT(s, knownBehaviourals.get(s));
+                }
+                    /*
                 try {
                     Natives n = Natives.valueOf(s.toUpperCase());
                     return new ClassBT(n.getSerializationInfo());
@@ -157,6 +167,7 @@ public enum BehaviouralFactory {
                     DeserializerRef deserRef = new DeserializerRef(new UnsafeComponent("unknown typedserializer) " + s));
                     return new ClassBT(new SerializationInfo(Object.class, serRef, deserRef));
                 }
+                     */
             }
             default: throw new RuntimeException("Unknown Json Type");
         }

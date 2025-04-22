@@ -5,18 +5,19 @@ import Generic.GenericPath;
 import Serialization.PacketField;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
 public abstract class AbstractBehavioural {
     private AbstractBehavioural father;
-    private final Map<String, AbstractBehavioural> children;
+    private final LinkedHashMap<String, AbstractBehavioural> children;
     private GenericPath path;
     private String name;
     private final boolean hiddenChildren;
-    public AbstractBehavioural(Map<String, AbstractBehavioural> children) {
+    public AbstractBehavioural(LinkedHashMap<String, AbstractBehavioural> children) {
         this(children, false);
     }
-    public AbstractBehavioural(Map<String, AbstractBehavioural> children, boolean hiddenChildren) {
+    public AbstractBehavioural(LinkedHashMap<String, AbstractBehavioural> children, boolean hiddenChildren) {
         this.children = children;
         this.hiddenChildren = hiddenChildren;
         this.path = new GenericPath();
@@ -28,7 +29,7 @@ public abstract class AbstractBehavioural {
 
 
     public AbstractBehavioural() {
-        this(Collections.emptyMap());
+        this(new LinkedHashMap<>(Collections.emptyMap()));
     }
 
     protected void setFather(String keyOfSelf, AbstractBehavioural father) {
@@ -109,7 +110,18 @@ public abstract class AbstractBehavioural {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         AbstractBehavioural that = (AbstractBehavioural) obj;
-        return Objects.equals(children, that.children);
+        Iterator<Map.Entry<String, AbstractBehavioural>> thatIterator = that.getChildren().entrySet().iterator();
+        Iterator<Map.Entry<String, AbstractBehavioural>> thisIterator = getChildren().entrySet().iterator();
+
+        while(thatIterator.hasNext() && thisIterator.hasNext()) {
+            Map.Entry<String, AbstractBehavioural> thatEntry = thatIterator.next();
+            Map.Entry<String, AbstractBehavioural> thisEntry = thisIterator.next();
+
+            if(!thatEntry.equals(thisEntry)){
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -123,5 +135,9 @@ public abstract class AbstractBehavioural {
             return children.get(key);
         }
         throw new RuntimeException("DEBUG missing children");
+    }
+
+    public List<String> getFieldNames(){
+        return new ArrayList<>(children.keySet());
     }
 }
