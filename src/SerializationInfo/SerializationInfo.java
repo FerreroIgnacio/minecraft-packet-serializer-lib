@@ -8,6 +8,7 @@ public class SerializationInfo {
     private final SerializerRef serializerRef;
     private final DeserializerRef deserializerRef;
 
+
     public SerializationInfo(Class<?> clazz, SerializerRef serializerRef, DeserializerRef deserializerRef) {
         this.classDescriptor = new ClassDescriptor(clazz);
         this.serializerRef = serializerRef;
@@ -15,6 +16,11 @@ public class SerializationInfo {
     }
     public SerializationInfo(ClassDescriptor classDescriptor, SerializerRef serializerRef, DeserializerRef deserializerRef) {
         this.classDescriptor = classDescriptor;
+        this.serializerRef = serializerRef;
+        this.deserializerRef = deserializerRef;
+    }
+    public SerializationInfo(String className, SerializerRef serializerRef, DeserializerRef deserializerRef) {
+        this.classDescriptor = new ClassDescriptor(className);
         this.serializerRef = serializerRef;
         this.deserializerRef = deserializerRef;
     }
@@ -34,5 +40,8 @@ public class SerializationInfo {
     @Override
     public String toString() {
         return classDescriptor + " #" + serializerRef + " #" + deserializerRef;
+    }
+    public SerializationInfo copy(){
+        return new SerializationInfo(classDescriptor.copy(), serializerRef, deserializerRef);
     }
 }

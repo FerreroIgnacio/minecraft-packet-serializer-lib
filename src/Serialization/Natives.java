@@ -122,21 +122,21 @@ public enum Natives {
             new SerializationInfo(
                     String.class,
                     new SerializerRef(new FunctionComponent("SerializerFunctions.writeAnonymousNbt", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readString", Consts.BUFNAME.toString()))
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readAnonymousNbt", Consts.BUFNAME.toString()))
             )
     ),
     ANONOPTIONALNBT("anonOptionalNbt",
             new SerializationInfo(
                     String.class,
                     new SerializerRef(new FunctionComponent("SerializerFunctions.writeAnonOptionalNbt", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readString", Consts.BUFNAME.toString()))
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readAnonOptionalNbt", Consts.BUFNAME.toString()))
             )
     ),
     OPTIONALNBT("optionalNbt",
             new SerializationInfo(
                     String.class,
                     new SerializerRef(new FunctionComponent("SerializerFunctions.writeOptionalNbt", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readString", Consts.BUFNAME.toString()))
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readOptionalNbt", Consts.BUFNAME.toString()))
             )
     ),
     BIT("bit",
@@ -174,7 +174,6 @@ public enum Natives {
                     new DeserializerRef(new FunctionComponent("DeserializerFunctions.readRestBuffer", Consts.BUFNAME.toString()))
             )
     );
-
 
     private final SerializationInfo serializationInfo;
     private final String nameInJson;

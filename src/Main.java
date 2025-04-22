@@ -1,5 +1,6 @@
 import Behaviourals.AbstractBehavioural;
 import Generic.GenericPath;
+import Serialization.PacketField;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -40,14 +41,13 @@ public class Main {
 
         Map<String, JsonMapper> versionProtocols = new LinkedHashMap<>();
         Map<String, Set<AbstractBehavioural>> globalTypes = new LinkedHashMap<>();
-       // Multimap<String, AbstractBehavioural> gTypes = ArrayListMultimap.create();
-
+        Map<String, Set<PacketField>> globalPackets = new LinkedHashMap<>();
+        Map<String, Set<AbstractBehavioural>> globalPacketBack = new LinkedHashMap<>();
         for(Map.Entry<String,File> entry: protocolsFileMap.entrySet()) {
             try {
                 JsonMapper versionMappedProtocol = mapper.readValue(entry.getValue(), JsonMapper.class);
              //   versionMappedProtocol;
                 versionProtocols.put(entry.getKey(), versionMappedProtocol);
-
 
                 for(Map.Entry<String, AbstractBehavioural> typeEntry: versionMappedProtocol.getTypes().entrySet()){
                     String typeName = typeEntry.getKey().toLowerCase();
@@ -59,14 +59,22 @@ public class Main {
                         globalTypes.get(typeName).add(type);
                     }
                 }
+                for(Map.Entry<String, Set<AbstractBehavioural>> typeEntry: versionMappedProtocol.getPacketSet().entrySet()){
+                    globalPacketBack.putIfAbsent(typeEntry.getKey(), new LinkedHashSet<>());
+                    globalPacketBack.get(typeEntry.getKey()).addAll(typeEntry.getValue());
+
+                    globalPackets.putIfAbsent(typeEntry.getKey(), new LinkedHashSet<>());
+                    for(AbstractBehavioural packet : typeEntry.getValue()) {
+                        globalPackets.get(typeEntry.getKey()).addAll(packet.asPacketFields());
+                    }
+                }
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                 throw new RuntimeException(e);
             }
         }
 
         List<Map.Entry<String, AbstractBehavioural>> unbuildableTypes = new ArrayList<>();
         for(Map.Entry<String, Set<AbstractBehavioural>> entry : globalTypes.entrySet()) {
-            Set<AbstractBehavioural> unbuildableSet = new LinkedHashSet<>();
             for(AbstractBehavioural type : entry.getValue()) {
                 if(!type.isBuildable()){
                     unbuildableTypes.add(new AbstractMap.SimpleEntry<>(entry.getKey(), type) {});

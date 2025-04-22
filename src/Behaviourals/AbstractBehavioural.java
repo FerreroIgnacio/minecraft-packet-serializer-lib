@@ -55,9 +55,9 @@ public abstract class AbstractBehavioural {
     }
 
     protected AbstractBehavioural getFather() {
-        if(father == null) {
+        /*if(father == null) {
             throw new BehaviouralNavigationException("Attempting to access father of root object");
-        }
+        }*/
         return father;
     }
 
@@ -76,12 +76,12 @@ public abstract class AbstractBehavioural {
         String firstSegment = path.getFirstSegment();
 
         // Only ContainerBT and BitfieldBT consume ".."
-        if ((this instanceof ContainerBT || this instanceof BitfieldBT) && firstSegment.equals("..")) {
+        if ((this instanceof ContainerBT || this instanceof BitfieldBT || this instanceof Bitflags) && firstSegment.equals("..")) {
             return getFather().resolvePath(path.consumeFirst());
         }
 
         // If this is a ContainerBT or BitfieldBT, navigate its children
-        if (this instanceof ContainerBT || this instanceof BitfieldBT) {
+        if (this instanceof ContainerBT || this instanceof BitfieldBT || this instanceof Bitflags) {
             AbstractBehavioural child = getChildren().get(firstSegment);
             if(hiddenChildren){
            //     throw new BehaviouralNavigationException("Attempting to access child of hidden children of " + this);
@@ -101,7 +101,15 @@ public abstract class AbstractBehavioural {
     }
 
     protected String getName() {
-        return path.getLastSegment();
+
+        String lSeg = path.getLastSegment();
+        if(lSeg.equals("anon")) {
+            AbstractBehavioural father = getFather();
+            if (father != null) {
+                lSeg = father.getName();
+            }
+        }
+        return lSeg;
     }
 
     @Override

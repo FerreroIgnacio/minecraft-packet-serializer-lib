@@ -1,7 +1,9 @@
 package Generic;
 
 public enum Consts {
-    BUFNAME("buf");
+    BUFNAME("buf"),
+    CUSTOMCLASSWRITEMETHOD(".serialize"),
+    CUSTOMCLASSREADMETHOD(".deserialize");
 
     private final String name;
     Consts(String name) {

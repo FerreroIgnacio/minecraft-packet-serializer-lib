@@ -11,6 +11,22 @@ import java.util.*;
 import java.util.List;
 
 public enum BehaviouralFactory {
+    BITFLAGS("bitflags") {
+        @Override
+        protected AbstractBehavioural build(Map<String, Object> map) {
+
+            ClassBT type = (ClassBT)BehaviouralFactory.createBehavioural(map.get("type"));
+            List<Object> flags = (List<Object>)map.get("flags");
+            int i = 1;
+            LinkedHashMap<String, AbstractBehavioural> children = new LinkedHashMap<>();
+            for(Object o : flags) {
+                String flag = (String)o;
+                children.put(flag, new BitflagsComponentBT(i));
+                i++;
+            }
+            return new Bitflags(children, type);
+        }
+    },
     ARRAY("array"){
         @Override
         protected AbstractBehavioural build(Map<String, Object> map) {

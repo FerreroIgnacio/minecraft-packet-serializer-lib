@@ -9,10 +9,11 @@ import java.util.Map;
 public class OptionBT extends AbstractBehavioural {
     public OptionBT(AbstractBehavioural child) {
         super(new LinkedHashMap<>(Map.of("content", child)), true);
+        this.child = child;
     }
-
+    private final AbstractBehavioural child;
     @Override
     public List<PacketField> asPacketFields() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return child.asPacketFields();
     }
 }

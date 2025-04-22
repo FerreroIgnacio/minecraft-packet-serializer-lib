@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class JsonMapper {
 
@@ -13,6 +15,39 @@ public class JsonMapper {
     private final Map<String, AbstractBehavioural> types = new LinkedHashMap<>();
     {
         BehaviouralFactory.setKnownBehaviourals(types);
+    }
+
+    public Map<String, Map<String, Map<String, AbstractBehavioural>>> getPackets() {
+        return packets;
+    }
+    private static Map<String, Set<AbstractBehavioural>> flattenPacketsSet(Map<String, Map<String, Map<String, AbstractBehavioural>>> packets) {
+        Map<String, Set<AbstractBehavioural>> flatMap = new LinkedHashMap<>();
+
+        // Traverse the nested structure
+        for (Map.Entry<String, Map<String, Map<String, AbstractBehavioural>>> entry : packets.entrySet()) {
+            String firstKey = entry.getKey();
+            Map<String, Map<String, AbstractBehavioural>> secondMap = entry.getValue();
+            for (Map.Entry<String, Map<String, AbstractBehavioural>> secondEntry : secondMap.entrySet()) {
+                String secondKey = secondEntry.getKey();
+                Map<String, AbstractBehavioural> thirdMap = secondEntry.getValue();
+                for (Map.Entry<String, AbstractBehavioural> thirdEntry : thirdMap.entrySet()) {
+                    String thirdKey = thirdEntry.getKey();
+                    AbstractBehavioural value = thirdEntry.getValue();
+
+                    // Put the value in the flat map
+                    flatMap.putIfAbsent(thirdKey, new LinkedHashSet<>());
+                    flatMap.get(thirdKey).add(value);
+                }
+            }
+        }
+
+        return flatMap;
+    }
+    public Set<AbstractBehavioural> getPacketSet(String name){
+        return flattenPacketsSet(packets).get(name);
+    }
+    public Map<String,Set<AbstractBehavioural>> getPacketSet(){
+        return flattenPacketsSet(packets);
     }
     private static Map<String, AbstractBehavioural> flattenPackets(Map<String, Map<String, Map<String, AbstractBehavioural>>> packets) {
         Map<String, AbstractBehavioural> flatMap = new LinkedHashMap<>();

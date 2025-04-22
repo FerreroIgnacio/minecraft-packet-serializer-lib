@@ -2,18 +2,15 @@ package Behaviourals;
 
 import Serialization.PacketField;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArrayBT extends AbstractBehavioural{
-    AbstractBehavioural countType;
-    String countFieldPath;
-    AbstractBehavioural type;
-    Integer fixedCount;
+    private final AbstractBehavioural countType;
+    private final String countFieldPath;
+    private final AbstractBehavioural type;
+    private final Integer fixedCount;
     public ArrayBT(AbstractBehavioural countType, AbstractBehavioural child) {
-        super(new LinkedHashMap<>(Map.of("content", child)), true);
+        super(new LinkedHashMap<>(Map.of("anon", child)), true);
         if((!(countType instanceof ClassBT)) && !(countType instanceof ReferenceBT)){
             ClassBT classbt = (ClassBT)countType;
             Class<?> clazz = classbt.getSerializationInfo().getClassDescriptor().getClazz();
@@ -27,7 +24,7 @@ public class ArrayBT extends AbstractBehavioural{
         fixedCount = null;
     }
     public ArrayBT(String countFieldPath, AbstractBehavioural child) {
-        super(new LinkedHashMap<>(Map.of("content", child)), true);
+        super(new LinkedHashMap<>(Map.of("anon", child)), true);
        // this.countType = (ClassBT)resolvePath(countFieldPath);
         this.countFieldPath = countFieldPath;
         countType = null;
@@ -35,19 +32,28 @@ public class ArrayBT extends AbstractBehavioural{
         fixedCount = null;
     }
     public ArrayBT(int fixedCount, AbstractBehavioural child) {
-        super(new LinkedHashMap<>(Map.of("content", child)), true);
+        super(new LinkedHashMap<>(Map.of("anon", child)), true);
         this.countFieldPath = null;
         countType = null;
         this.fixedCount = fixedCount;
+        this.type = child;
     }
 
     @Override
     public List<PacketField> asPacketFields() {
-        AbstractBehavioural countType = this.countType == null ? resolvePath(countFieldPath) : this.countType;
-        List<PacketField> pfs = type.asPacketFields();
+        AbstractBehavioural aux;
+
+          //  AbstractBehavioural countType = this.countType == null ? resolvePath(countFieldPath) : this.countType;
+
+            aux = this.type;
+
+        List<PacketField> pfs = aux.asPacketFields();
+        List<PacketField> newPfs = new ArrayList<>();
         for(PacketField pf : pfs){
-            pf.getSerializationInfo().getClassDescriptor().arraify();
+            newPfs.add(new PacketField(pf.getName(), pf.getSerializationInfo().copy()));
+            newPfs.getLast().getSerializationInfo().getClassDescriptor().arraify();
+
         }
-        return pfs;
+        return newPfs;
     }
 }
