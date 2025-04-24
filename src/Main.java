@@ -43,6 +43,8 @@ public class Main {
         Map<String, Set<AbstractBehavioural>> globalTypes = new LinkedHashMap<>();
         Map<String, Set<PacketField>> globalPackets = new LinkedHashMap<>();
         Map<String, Set<AbstractBehavioural>> globalPacketBack = new LinkedHashMap<>();
+
+        Map<String, Set<Packet>> neoPackets = new LinkedHashMap<>();
         for(Map.Entry<String,File> entry: protocolsFileMap.entrySet()) {
             try {
                 JsonMapper versionMappedProtocol = mapper.readValue(entry.getValue(), JsonMapper.class);
@@ -66,6 +68,11 @@ public class Main {
                     globalPackets.putIfAbsent(typeEntry.getKey(), new LinkedHashSet<>());
                     for(AbstractBehavioural packet : typeEntry.getValue()) {
                         globalPackets.get(typeEntry.getKey()).addAll(packet.asPacketFields());
+                    }
+
+                    neoPackets.putIfAbsent(typeEntry.getKey(), new LinkedHashSet<>());
+                    for(AbstractBehavioural packet : typeEntry.getValue()) {
+                        neoPackets.get(typeEntry.getKey()).add(new Packet(packet, typeEntry.getKey(), entry.getKey()));
                     }
                 }
             } catch (Exception e) {

@@ -77,7 +77,7 @@ public enum BehaviouralFactory {
     },
     OPTION("option"){
         protected AbstractBehavioural build(List<Map<String, Object>> l) {
-            AbstractBehavioural type = BehaviouralFactory.createBehavioural(l.getFirst());
+            AbstractBehavioural type = BehaviouralFactory.createBehavioural(l);
             return new OptionBT(type);
         }
     },
@@ -178,9 +178,6 @@ public enum BehaviouralFactory {
                 Object typeObject = l.getLast();
                 try{
                     BehaviouralFactory factory = BehaviouralFactory.valueOf(s.toUpperCase());
-                    if(s.equals("option")){
-                        return new OptionBT(factory.objectBuild(typeObject));
-                    }
                     return factory.objectBuild(typeObject);
                 } catch(IllegalArgumentException e){
                     return new AbstractBehavioural() {
