@@ -56,4 +56,17 @@ public class ArrayBT extends AbstractBehavioural{
         }
         return newPfs;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ArrayBT arrayBT = (ArrayBT) o;
+        return Objects.equals(countType, arrayBT.countType) && Objects.equals(countFieldPath, arrayBT.countFieldPath) && Objects.equals(type, arrayBT.type) && Objects.equals(fixedCount, arrayBT.fixedCount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), countType, countFieldPath, type, fixedCount);
+    }
 }

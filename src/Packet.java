@@ -1,5 +1,7 @@
 import Behaviourals.AbstractBehavioural;
+import Serialization.PacketField;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Packet {
@@ -28,5 +30,16 @@ public class Packet {
     @Override
     public int hashCode() {
         return Objects.hashCode(content);
+    }
+    public List<PacketField> asPacketFields(){
+        return content.asPacketFields();
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getName() {
+        return name;
     }
 }

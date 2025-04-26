@@ -1,13 +1,15 @@
 import Behaviourals.AbstractBehavioural;
-import Generic.GenericPath;
+import Generic.Consts;
 import Serialization.PacketField;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class Main {
@@ -44,7 +46,7 @@ public class Main {
         Map<String, Set<PacketField>> globalPackets = new LinkedHashMap<>();
         Map<String, Set<AbstractBehavioural>> globalPacketBack = new LinkedHashMap<>();
 
-        Map<String, Set<Packet>> neoPackets = new LinkedHashMap<>();
+        Map<String, LinkedHashSet<Packet>> neoPackets = new LinkedHashMap<>();
         for(Map.Entry<String,File> entry: protocolsFileMap.entrySet()) {
             try {
                 JsonMapper versionMappedProtocol = mapper.readValue(entry.getValue(), JsonMapper.class);
@@ -89,6 +91,156 @@ public class Main {
             }
         }
 
+        //create multiversion packets
+        Map<String, MultiVersionPacket> mvps = new LinkedHashMap<>();
+        for(Map.Entry<String, LinkedHashSet<Packet>> packetType : neoPackets.entrySet()) {
+            String packetTypeName = packetType.getKey().toLowerCase();
+
+            Packet firstInstance = packetType.getValue().getFirst();
+            LinkedHashSet<PacketField> initFields = new LinkedHashSet<>(firstInstance.asPacketFields());
+            MultiVersionPacket mvp = new MultiVersionPacket(packetTypeName, firstInstance.getVersion(), initFields);
+
+            for(Packet packet : packetType.getValue()) {
+                LinkedHashSet<PacketField> fields = new LinkedHashSet<>(packet.asPacketFields());
+                mvp.addVersion(packet.getVersion(), fields);
+            }
+            mvps.put(packetTypeName, mvp);
+        }
+
+
+
+
+        //write content
+        StringBuilder fileContent = new StringBuilder();
+        for(MultiVersionPacket mvp : mvps.values()) {
+            if(mvp.getName().equals("packet")){
+                continue;
+            }
+            StringBuilder packetClass = new StringBuilder("class " + mvp.getName() + " extends PacketBase{\n");
+
+            packetClass.append(generateAssignments(mvp));
+            packetClass.append(generateConstructor(mvp));
+            packetClass.append(generateRead(mvp));
+            packetClass.append("}\n");
+            fileContent.append(packetClass).append("\n");
+        }
+        writeToFile("out.java", indentString(fileContent.toString()));
+    }
+    public static void writeToFile(String filePath, String content) throws IOException {
+        Path path = Paths.get(filePath);
+
+        // Make sure the directory hierarchy exists
+        Path parent = path.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+
+        // Create or overwrite the file with UTF‑8 text
+        Files.writeString(
+                path,
+                content,
+                StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        );
     }
 
+    public static String indentString(String input) {
+        StringBuilder result = new StringBuilder();
+        int indentLevel = 0;
+        boolean increaseIndent = false;
+
+        for (String line : input.split("\n", -1)) { // Preserve empty lines
+            String trimmedLine = line.stripLeading();
+
+            // Adjust indentation before appending
+            if (trimmedLine.startsWith("}") || trimmedLine.startsWith("){")|| trimmedLine.startsWith(");")) {
+                indentLevel = Math.max(0, indentLevel - 1);
+            }
+
+            result.append("\t".repeat(indentLevel)).append(trimmedLine).append("\n");
+
+            // Increase indent for class and block openings
+            increaseIndent = trimmedLine.matches("(class|static class|public class)\\s+\\w+.*\\{\\s+")
+                    || trimmedLine.endsWith("{")
+                    || trimmedLine.endsWith("(")
+                    && !trimmedLine.equals("){");
+            if (increaseIndent) {
+                indentLevel++;
+            }
+        }
+
+        return result.toString();
+    }
+
+
+    public static String sizeString(MultiVersionPacket mvp){
+        return null;
+    }
+
+    public static String generateConstructor(MultiVersionPacket mvp){
+        StringBuilder result = new StringBuilder();
+        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
+            StringBuilder constructor = new StringBuilder("//Constructor for " + e.getKey()  +"\n@Version(\"" + e.getKey() + "\")\npublic " + mvp.getName() + "(");
+
+            List<String> simpleRefs = new ArrayList<>();
+            List<String> assignments = new ArrayList<>();
+            assignments.add("super(1,\"" + mvp.getName() +"\",\"" + e.getKey() +"\", -1)");
+            for(PacketField pf : e.getValue()) {
+                simpleRefs.add(pf.simpleRef());
+                assignments.add("this." + pf.getName() + " = " + pf.getName());
+            }
+            Set<PacketField> fieldsToNull = mvp.getTotalFields();
+            fieldsToNull.removeAll(e.getValue());
+            for(PacketField pf : fieldsToNull) {
+                assignments.add("this." + pf.getName() + " = null");
+            }
+
+            String assignmentsStr = String.join(";\n ", assignments);
+            String simpleRefsStr = String.join(", ", simpleRefs);
+            constructor.append(simpleRefsStr + "){\n");
+            constructor.append(assignmentsStr).append(";\n");
+            constructor.append("}\n");
+            result.append(constructor);
+        }
+        return result.toString();
+    }
+
+    public static String generateAssignments(MultiVersionPacket mvp){
+        StringBuilder fields = new StringBuilder();
+        for(PacketField pf : mvp.getGlobalFields()){
+            String line = "private final " + pf.simpleRef() + ";\n";
+            fields.append(line);
+        }
+        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
+            String comment = "//Only available for version " + e.getKey() + "\n";
+            fields.append(comment);
+            var aux = e.getValue();
+            aux.removeAll(mvp.getGlobalFields());
+            for(PacketField pf : aux) {
+                String line = "private final " + pf.simpleRef() + ";\n";
+                fields.append(line);
+            }
+        }
+        return fields.toString();
+    }
+
+    public static String generateRead(MultiVersionPacket mvp){
+        StringBuilder read = new StringBuilder("public static " + mvp.getName() + " read(ByteBuffer " + Consts.BUFNAME + ", String version){\n");
+        read.append("switch(version){\n");
+        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
+            StringBuilder aux = new StringBuilder("case \"" + e.getKey() + "\" : {\n");
+            for (PacketField pf : e.getValue()) {
+                aux.append(pf.toString() + ";\n");
+            }
+
+            aux.append("return new " + mvp.getName() + "(" + String.join(",", e.getValue().stream().map(PacketField::getName).toList()) +");");
+            aux.append("\n}\n");
+
+            read.append(aux);
+        }
+
+        read.append("}\n}\n");
+        return read.toString();
+    }
 }

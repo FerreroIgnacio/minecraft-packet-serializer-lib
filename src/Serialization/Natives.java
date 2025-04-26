@@ -16,15 +16,15 @@ public enum Natives {
     VARINT("varint",
             new SerializationInfo(
                     Integer.class,
-                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeVarint", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readVarint", Consts.BUFNAME.toString()))
+                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeVarInt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readVarInt", Consts.BUFNAME.toString()))
             )
     ),
     VARLONG("varlong",
             new SerializationInfo(
                     Long.class,
-                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeVarlong", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readVarlong", Consts.BUFNAME.toString()))
+                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeVarLong", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readVarLong", Consts.BUFNAME.toString()))
             )
     ),
     OPTVARINT("optvarint",
@@ -37,8 +37,8 @@ public enum Natives {
     BOOL("bool",
             new SerializationInfo(
                     Boolean.class,
-                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeBoolean", Consts.BUFNAME.toString())),
-                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readBoolean", Consts.BUFNAME.toString()))
+                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeBool", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readBool", Consts.BUFNAME.toString()))
             )
     ),
     U8("u8",

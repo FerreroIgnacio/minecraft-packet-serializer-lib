@@ -31,4 +31,16 @@ public class TernaryRefComponent implements RefComponent{
     public String toString() {
         return "(" + String.join(" "+joinOperator + " ",conditionNames) +  " ? " + left + " : " + right + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TernaryRefComponent that = (TernaryRefComponent) o;
+        return Objects.equals(conditions, that.conditions) && Objects.equals(conditionNames, that.conditionNames) && Objects.equals(left, that.left) && Objects.equals(right, that.right) && Objects.equals(joinOperator, that.joinOperator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(conditions, conditionNames, left, right, joinOperator);
+    }
 }

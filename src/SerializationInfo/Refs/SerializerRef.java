@@ -6,4 +6,5 @@ public class SerializerRef extends Ref {
     public SerializerRef(RefComponent component) {
         super(component);
     }
+
 }

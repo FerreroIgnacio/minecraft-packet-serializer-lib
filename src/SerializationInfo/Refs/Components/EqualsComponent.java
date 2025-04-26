@@ -1,5 +1,7 @@
 package SerializationInfo.Refs.Components;
 
+import java.util.Objects;
+
 public class EqualsComponent implements Condition {
     private final String name;
     private final Integer intValue;
@@ -28,5 +30,17 @@ public class EqualsComponent implements Condition {
     public Condition negate() {
         this.negated = !negated;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        EqualsComponent that = (EqualsComponent) o;
+        return Objects.equals(name, that.name) && Objects.equals(intValue, that.intValue) && Objects.equals(stringValue, that.stringValue) && Objects.equals(negated, that.negated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, intValue, stringValue, negated);
     }
 }

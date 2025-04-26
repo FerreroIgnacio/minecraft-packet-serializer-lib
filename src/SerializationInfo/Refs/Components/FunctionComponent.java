@@ -2,6 +2,7 @@ package SerializationInfo.Refs.Components;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class FunctionComponent implements RefComponent {
     private final String function;
@@ -22,5 +23,17 @@ public class FunctionComponent implements RefComponent {
 
     protected String[] getArgs() {
         return args;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        FunctionComponent that = (FunctionComponent) o;
+        return Objects.equals(function, that.function) && Objects.deepEquals(args, that.args);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(function, Arrays.hashCode(args));
     }
 }
