@@ -118,8 +118,8 @@ public class Main {
             }
             StringBuilder packetClass = new StringBuilder("class " + mvp.getName() + " extends PacketBase{\n");
 
-            packetClass.append(generateAssignments(mvp));
-            packetClass.append(generateConstructor(mvp));
+            packetClass.append(mvp.generateFieldDeclarations());
+            packetClass.append(mvp.generateConstructors());
             packetClass.append(generateRead(mvp));
             packetClass.append("}\n");
             fileContent.append(packetClass).append("\n");
@@ -178,62 +178,17 @@ public class Main {
         return null;
     }
 
-    public static String generateConstructor(MultiVersionPacket mvp){
-        StringBuilder result = new StringBuilder();
-        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
-            StringBuilder constructor = new StringBuilder("//Constructor for " + e.getKey()  +"\n@Version(\"" + e.getKey() + "\")\npublic " + mvp.getName() + "(");
 
-            List<String> simpleRefs = new ArrayList<>();
-            List<String> assignments = new ArrayList<>();
-            assignments.add("super(1,\"" + mvp.getName() +"\",\"" + e.getKey() +"\", -1)");
-            for(PacketField pf : e.getValue()) {
-                simpleRefs.add(pf.simpleRef());
-                assignments.add("this." + pf.getName() + " = " + pf.getName());
-            }
-            Set<PacketField> fieldsToNull = mvp.getTotalFields();
-            fieldsToNull.removeAll(e.getValue());
-            for(PacketField pf : fieldsToNull) {
-                assignments.add("this." + pf.getName() + " = null");
-            }
 
-            String assignmentsStr = String.join(";\n ", assignments);
-            String simpleRefsStr = String.join(", ", simpleRefs);
-            constructor.append(simpleRefsStr + "){\n");
-            constructor.append(assignmentsStr).append(";\n");
-            constructor.append("}\n");
-            result.append(constructor);
-        }
-        return result.toString();
-    }
-
-    public static String generateAssignments(MultiVersionPacket mvp){
-        StringBuilder fields = new StringBuilder();
-        for(PacketField pf : mvp.getGlobalFields()){
-            String line = "private final " + pf.simpleRef() + ";\n";
-            fields.append(line);
-        }
-        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
-            String comment = "//Only available for version " + e.getKey() + "\n";
-            fields.append(comment);
-            var aux = e.getValue();
-            aux.removeAll(mvp.getGlobalFields());
-            for(PacketField pf : aux) {
-                String line = "private final " + pf.simpleRef() + ";\n";
-                fields.append(line);
-            }
-        }
-        return fields.toString();
-    }
 
     public static String generateRead(MultiVersionPacket mvp){
         StringBuilder read = new StringBuilder("public static " + mvp.getName() + " read(ByteBuffer " + Consts.BUFNAME + ", String version){\n");
         read.append("switch(version){\n");
-        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionedFields().entrySet()) {
+        for(Map.Entry<String, Set<PacketField>> e : mvp.getVersionFields().entrySet()) {
             StringBuilder aux = new StringBuilder("case \"" + e.getKey() + "\" : {\n");
             for (PacketField pf : e.getValue()) {
                 aux.append(pf.toString() + ";\n");
             }
-
             aux.append("return new " + mvp.getName() + "(" + String.join(",", e.getValue().stream().map(PacketField::getName).toList()) +");");
             aux.append("\n}\n");
 
