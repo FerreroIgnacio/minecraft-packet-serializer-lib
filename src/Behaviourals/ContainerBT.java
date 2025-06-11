@@ -10,14 +10,25 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ContainerBT extends AbstractBehavioural {
+    private boolean isDirectoryLevel;
+
+    public boolean isDirectoryLevel() {
+        return isDirectoryLevel;
+    }
+    public void disableDirectoryLevel() {
+      //  isDirectoryLevel = false;
+    }
+
     public ContainerBT(LinkedHashMap<String, AbstractBehavioural> children) {
         super(children);
+        isDirectoryLevel = true;
     }
+
 
     @Override
     public List<PacketField> asPacketFields() {
         return getChildren().values().stream()
                 .map(AbstractBehavioural::asPacketFields)
-                .flatMap(List::stream).collect(Collectors.toList());
+                .flatMap(List::stream).map(p -> p.addGenerator(this)).collect(Collectors.toList());
     }
 }

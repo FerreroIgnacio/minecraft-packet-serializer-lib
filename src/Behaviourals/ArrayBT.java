@@ -1,6 +1,11 @@
 package Behaviourals;
 
 import Serialization.PacketField;
+import SerializationInfo.Refs.Components.FunctionComponent;
+import SerializationInfo.Refs.Components.UnsafeComponent;
+import SerializationInfo.Refs.DeserializerRef;
+import SerializationInfo.Refs.SerializerRef;
+import SerializationInfo.SerializationInfo;
 
 import java.util.*;
 
@@ -41,16 +46,16 @@ public class ArrayBT extends AbstractBehavioural{
 
     @Override
     public List<PacketField> asPacketFields() {
-        AbstractBehavioural aux;
 
-          //  AbstractBehavioural countType = this.countType == null ? resolvePath(countFieldPath) : this.countType;
-
-            aux = this.type;
-
-        List<PacketField> pfs = aux.asPacketFields();
+        List<PacketField> pfs = type.asPacketFields();
         List<PacketField> newPfs = new ArrayList<>();
         for(PacketField pf : pfs){
-            newPfs.add(new PacketField(pf.getName(), pf.getSerializationInfo().copy()));
+            //convert readInt() to readArr(aux -> readInt())
+
+        //    SerializationInfo
+            SerializerRef newSer = new SerializerRef(new UnsafeComponent("ArraySerialize()"));
+            DeserializerRef newDeser = new DeserializerRef(new FunctionComponent("readArray", pf.getSerializationInfo().getDeserializerRef().toString()));
+            newPfs.add(new PacketField(pf.getName(), new SerializationInfo(pf.getSerializationInfo().getClassDescriptor().copy(), newSer, newDeser), List.of(this)));
             newPfs.getLast().getSerializationInfo().getClassDescriptor().arraify();
 
         }

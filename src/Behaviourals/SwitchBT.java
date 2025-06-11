@@ -38,8 +38,12 @@ public class SwitchBT extends AbstractBehavioural{
         List<Condition> negatedTotalConditions = new ArrayList<>();
         List<PacketField> fields = new ArrayList<>();
         UnsafeComponent nul =  new UnsafeComponent("null");
-
-        String finalCompareToName = resolvePath(compareToPath).getName();
+        final String finalCompareToName;
+        if(!compareToPath.startsWith("$")) {
+             finalCompareToName = resolvePath(compareToPath).getName();
+        } else {
+            finalCompareToName =  "externalCompareTo" + compareToPath;
+        }
 
         for(Map.Entry<AbstractBehavioural, List<String>> entry : cachedChildren.entrySet()) {
             List<String> switchValues = entry.getValue();
@@ -59,7 +63,7 @@ public class SwitchBT extends AbstractBehavioural{
                 TernaryRefComponent newSerializerRefComp = new TernaryRefComponent(conditions, sRcomp, nul, "||");
 
                 SerializationInfo fieldInfo = new SerializationInfo(p.getSerializationInfo().getClassDescriptor(), new SerializerRef(newSerializerRefComp), new DeserializerRef(newDeserializerRefComp));
-                return new PacketField(cachedChildren.size() > 1 ? this.getName()+ "_" + p.getName() : this.getName(), fieldInfo);
+                return new PacketField(cachedChildren.size() > 1 ? (this.getName().isEmpty() ? "" : getName() + "_") + p.getName() : this.getName(), fieldInfo, List.of(this));
             }).toList();
             fields.addAll(packetList);
         }
@@ -72,7 +76,7 @@ public class SwitchBT extends AbstractBehavioural{
                 TernaryRefComponent newSerializerRefComp = new TernaryRefComponent(negatedTotalConditions, defaultSerializerRefcomp, nul, "&&");
 
                 SerializationInfo fieldInfo = new SerializationInfo(pf.getSerializationInfo().getClassDescriptor(), new SerializerRef(newSerializerRefComp), new DeserializerRef(newDeserializerRefComp));
-                fields.add(new PacketField(pf.getName(), fieldInfo));
+                fields.add(new PacketField(pf.getName(), fieldInfo, List.of(this)));
             }
         }
         return fields;

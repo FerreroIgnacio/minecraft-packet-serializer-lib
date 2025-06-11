@@ -1,16 +1,26 @@
 package Serialization;
 
+import Behaviourals.AbstractBehavioural;
 import SerializationInfo.SerializationInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class PacketField {
-    private final String name;
+    private String name;
     private final SerializationInfo serializationInfo;
 
-    public PacketField(String name, SerializationInfo serializationInfo) {
+    private final List<AbstractBehavioural> generator;
+
+    public PacketField(String name, SerializationInfo serializationInfo, List<AbstractBehavioural> generators) {
         this.name = name;
         this.serializationInfo = serializationInfo;
+        this.generator = new ArrayList<>(generators);
+    }
+    public PacketField addGenerator(AbstractBehavioural g){
+        generator.add(g);
+        return this;
     }
 
     @Override
@@ -32,6 +42,10 @@ public class PacketField {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

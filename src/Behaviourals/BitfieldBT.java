@@ -60,7 +60,7 @@ public class BitfieldBT extends AbstractBehavioural {
 
         PacketField totalField = new PacketField(
                 totalName,
-                totalInfo);
+                totalInfo, List.of(this));
         List<PacketField> returnList = new ArrayList<>();
         returnList.add(totalField);
 
@@ -75,11 +75,11 @@ public class BitfieldBT extends AbstractBehavioural {
                     ));
             SerializerRef serializerRef = new SerializerRef(new EqualsComponent("1", 1));
             SerializationInfo fieldSerInfo = new SerializationInfo(Integer.class, serializerRef, deserializerRef);
+            String str = super.getPath().getLastSegment();
             PacketField p = new PacketField(
-                    super.getPath().getLastSegment() +
-                            "_" + key,
+                    (str.isEmpty() ? "" : super.getPath().getLastSegment() + "_") + key,
                     fieldSerInfo
-                    );
+                    , List.of(this));
             returnList.add(p);
         }
         return returnList;

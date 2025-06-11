@@ -29,7 +29,8 @@ public class ReferenceBT extends  AbstractBehavioural{
                                 name,
                                 new SerializerRef(new FunctionComponent(name + Consts.CUSTOMCLASSWRITEMETHOD.getName())),
                                 new DeserializerRef(new FunctionComponent(name + Consts.CUSTOMCLASSREADMETHOD.getName()))
-                        ))
+                        ),
+                        List.of(this))
         );
     }
 

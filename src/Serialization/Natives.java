@@ -132,6 +132,13 @@ public enum Natives {
                     new DeserializerRef(new FunctionComponent("DeserializerFunctions.readAnonOptionalNbt", Consts.BUFNAME.toString()))
             )
     ),
+    COMPRESSEDNBT("compressedNbt",
+            new SerializationInfo(
+                    String.class,
+                    new SerializerRef(new FunctionComponent("SerializerFunctions.writeCompressedNbt", Consts.BUFNAME.toString())),
+                    new DeserializerRef(new FunctionComponent("DeserializerFunctions.readCompressedNbt", Consts.BUFNAME.toString()))
+            )
+    ),
     OPTIONALNBT("optionalNbt",
             new SerializationInfo(
                     String.class,

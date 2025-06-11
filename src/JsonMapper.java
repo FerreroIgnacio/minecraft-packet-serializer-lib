@@ -1,4 +1,5 @@
 import Behaviourals.AbstractBehavioural;
+import Behaviourals.ContainerBT;
 import Generic.UnexpectedJsonFormatException;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -113,6 +114,9 @@ public class JsonMapper {
                 } else {
                     bh = BehaviouralFactory.createBehavioural(entry.getValue());
                     BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
+                    if(bh instanceof ContainerBT cbt){
+                        cbt.disableDirectoryLevel();
+                    }
                 }
            //     BehaviouralFactory.addKnownBehavioural(entry.getKey(), bh);
             }
@@ -139,8 +143,15 @@ public class JsonMapper {
                 String packetName = node.getKey();
                 Object jsonType = node.getValue();
                 AbstractBehavioural bhType = BehaviouralFactory.createBehavioural(jsonType);
-                packets.get(state).computeIfAbsent(packetName, k -> new LinkedHashMap<>());
-                packets.get(state).get(target).put(packetName, bhType);
+                if (packetName.startsWith("packet_")) {
+                    packets.get(state).computeIfAbsent(packetName, k -> new LinkedHashMap<>());
+                    packets.get(state).get(target).put(packetName, bhType);
+                } else {
+                    types.put(packetName, bhType);
+                    if(bhType instanceof ContainerBT cbt){
+                        cbt.disableDirectoryLevel();
+                    }
+                }
             }
         });
     }

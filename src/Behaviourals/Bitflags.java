@@ -14,6 +14,6 @@ public class Bitflags extends AbstractBehavioural{
 
     @Override
     public List<PacketField> asPacketFields() {
-        return List.of(new PacketField(getName(), type.asPacketFields().getFirst().getSerializationInfo()));
+        return List.of(new PacketField(getName(), type.asPacketFields().getFirst().getSerializationInfo(), List.of(this)));
     }
 }

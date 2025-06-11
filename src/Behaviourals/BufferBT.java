@@ -35,7 +35,7 @@ public class BufferBT extends AbstractBehavioural{
                 new SerializerRef(new FunctionComponent("SerializerFunctions.writeBuffer", Consts.BUFNAME.toString())),
                 new DeserializerRef(new FunctionComponent("DeserializerFunctions.readBuffer", Consts.BUFNAME.toString()))
         );
-        return List.of(new PacketField(getName(), sInfo));
+        return List.of(new PacketField(getName(), sInfo, List.of(this)));
     }
     @Override
     public boolean equals(Object o) {

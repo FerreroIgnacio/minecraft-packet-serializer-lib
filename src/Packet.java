@@ -24,7 +24,7 @@ public class Packet {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Packet packet = (Packet) o;
-        return Objects.equals(content, packet.content);
+        return Objects.equals(content, packet.content) && Objects.equals(packet.version, version);
     }
 
     @Override

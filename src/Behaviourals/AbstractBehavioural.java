@@ -29,9 +29,6 @@ public abstract class AbstractBehavioural {
             childEntry.getValue().setFather(childEntry.getKey(), this);
         }
     }
-
-
-
     public AbstractBehavioural() {
         this(new LinkedHashMap<>(Collections.emptyMap()));
     }
@@ -76,12 +73,13 @@ public abstract class AbstractBehavioural {
         String firstSegment = path.getFirstSegment();
 
         // Only ContainerBT and BitfieldBT consume ".."
-        if ((this instanceof ContainerBT || this instanceof BitfieldBT || this instanceof Bitflags) && firstSegment.equals("..")) {
+
+        if (((this instanceof ContainerBT cbt && cbt.isDirectoryLevel())|| this instanceof BitfieldBT || this instanceof Bitflags) && firstSegment.equals("..")) {
             return getFather().resolvePath(path.consumeFirst());
         }
 
         // If this is a ContainerBT or BitfieldBT, navigate its children
-        if (this instanceof ContainerBT || this instanceof BitfieldBT || this instanceof Bitflags) {
+        if ((this instanceof ContainerBT cbt && cbt.isDirectoryLevel()) || this instanceof BitfieldBT || this instanceof Bitflags) {
             AbstractBehavioural child = getChildren().get(firstSegment);
             if(hiddenChildren){
            //     throw new BehaviouralNavigationException("Attempting to access child of hidden children of " + this);
@@ -109,7 +107,7 @@ public abstract class AbstractBehavioural {
                 lSeg = father.getName();
             }
         }
-        return lSeg;
+        return lSeg.equals("default") ? "_default" : lSeg.replace(":", "$");
     }
 
     @Override
@@ -178,5 +176,20 @@ public abstract class AbstractBehavioural {
         }
         // no unbuildable children means this subtree is fine
         return this;
+    }
+
+    // Stub: Returns null by default, override in subclasses if needed
+    public SerializationInfo.ClassDescriptor getClassDescriptor() {
+        return null;
+    }
+    // Stub: Returns empty string by default, override in subclasses if needed
+    public String generateFieldDeclarations() {
+        return "";
+    }
+    public String generateConstructors() {
+        return "";
+    }
+    public String generateGetters() {
+        return "";
     }
 }

@@ -14,6 +14,6 @@ public class OptionBT extends AbstractBehavioural {
     private final AbstractBehavioural child;
     @Override
     public List<PacketField> asPacketFields() {
-        return child.asPacketFields();
+        return child.asPacketFields().stream().map(p -> p.addGenerator(this)).toList();
     }
 }

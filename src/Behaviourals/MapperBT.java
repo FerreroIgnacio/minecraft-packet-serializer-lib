@@ -15,7 +15,7 @@ public class MapperBT extends AbstractBehavioural {
     ClassBT type;
     @Override
     public List<PacketField> asPacketFields() {
-        return type.asPacketFields();
+        return type.asPacketFields().stream().map(p -> p.addGenerator(this)).toList();
     }
 
     @Override

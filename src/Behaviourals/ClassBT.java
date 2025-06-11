@@ -26,7 +26,7 @@ public class ClassBT extends AbstractBehavioural {
             return Collections.emptyList();
         return List.of(new PacketField(
                 getName(),
-                serializationInfo)
+                serializationInfo, List.of(this))
         );
     }
 
