@@ -145,6 +145,7 @@ public class Main {
                 "import java.math.BigInteger;\n\n");
         Set<String> generatedTypes = new HashSet<>();
         Map<String, String> typeNameToClassName = new LinkedHashMap<>();
+
         // Generate type classes with names as referenced in packets FIRST
         StringBuilder typeContent = new StringBuilder();
         for (Map.Entry<String, String> entry : typeNameToClassName.entrySet()) {
